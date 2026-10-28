@@ -176,21 +176,21 @@ export default function AtmosphericLightingChamber() {
                 Select Circadian Ambiance:
               </span>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                 {Object.values(PRESETS).map((p) => {
                   const isSelected = activePreset === p.id;
                   return (
                     <button
                       key={p.id}
                       onClick={() => setActivePreset(p.id)}
-                      className={`p-4 rounded-2xl border text-left transition-all duration-300 flex flex-col justify-between ${
+                      className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border text-left transition-all duration-300 flex flex-col justify-between ${
                         isSelected
                           ? "bg-obsidian border-champagne shadow-champagne ring-1 ring-champagne/50 scale-[1.02]"
                           : "bg-obsidian/60 border-white/10 hover:border-champagne/40 hover:bg-obsidian/90"
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-serif text-ivory font-medium">
+                      <div className="flex items-center justify-between mb-1 sm:mb-2">
+                        <span className="text-[11px] sm:text-xs font-serif text-ivory font-medium">
                           {p.name}
                         </span>
                         <span
@@ -198,7 +198,7 @@ export default function AtmosphericLightingChamber() {
                           style={{ backgroundColor: p.dirColor }}
                         />
                       </div>
-                      <span className="text-[10px] font-mono text-champagne/80">
+                      <span className="text-[9px] sm:text-[10px] font-mono text-champagne/80">
                         {p.kelvin}
                       </span>
                     </button>
@@ -263,18 +263,30 @@ export default function AtmosphericLightingChamber() {
                 </button>
               </div>
 
-              <div className="flex items-center space-x-2">
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                 {(["chair", "lamp", "sculpture"] as const).map((m) => (
                   <button
                     key={m}
                     onClick={() => setActiveModel(m)}
-                    className={`flex-1 py-2.5 rounded-xl border text-xs font-mono uppercase tracking-wider transition-all ${
+                    className={`py-2 sm:py-2.5 px-1 rounded-xl border text-[10px] sm:text-xs font-mono uppercase tracking-wider transition-all text-center ${
                       activeModel === m
                         ? "bg-champagne text-obsidian border-champagne font-bold shadow-champagne"
                         : "bg-obsidian/60 border-white/10 hover:border-champagne/40 text-ivory-muted"
                     }`}
                   >
-                    {m === "chair" ? "Lounge Armchair" : m === "lamp" ? "Brass Lamp" : "Bronze Ribbon"}
+                    {m === "chair" ? (
+                      <>
+                        <span className="hidden sm:inline">Lounge </span>Armchair
+                      </>
+                    ) : m === "lamp" ? (
+                      <>
+                        <span className="hidden sm:inline">Brass </span>Lamp
+                      </>
+                    ) : (
+                      <>
+                        <span className="hidden sm:inline">Bronze </span>Ribbon
+                      </>
+                    )}
                   </button>
                 ))}
               </div>
@@ -285,10 +297,10 @@ export default function AtmosphericLightingChamber() {
           {/* Right: 3D Real-Time Chamber Viewport (Col 7) */}
           <div
             ref={containerRef}
-            className="lg:col-span-7 h-[460px] sm:h-[520px] rounded-3xl bg-obsidian border border-champagne/20 relative overflow-hidden shadow-2xl flex items-center justify-center"
+            className="lg:col-span-7 h-[380px] xs:h-[440px] sm:h-[520px] rounded-2xl sm:rounded-3xl bg-obsidian border border-champagne/20 relative overflow-hidden shadow-2xl flex items-center justify-center"
           >
             {/* Top Compass Pill */}
-            <div className="absolute top-5 left-5 z-20 flex items-center space-x-2 bg-charcoal/80 border border-white/15 px-3.5 py-1.5 rounded-full text-[11px] font-mono text-ivory backdrop-blur-md">
+            <div className="absolute top-4 sm:top-5 left-4 sm:left-5 z-20 flex items-center space-x-1.5 sm:space-x-2 bg-charcoal/80 border border-white/15 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono text-ivory backdrop-blur-md">
               <Compass className="w-3.5 h-3.5 text-champagne" />
               <span>Angle: {lightAngle}° • {preset.name}</span>
             </div>

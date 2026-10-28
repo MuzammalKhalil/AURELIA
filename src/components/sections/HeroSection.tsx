@@ -60,28 +60,28 @@ export default function HeroSection() {
             </div>
 
             {/* Curatorial Trust Metrics */}
-            <div className="pt-6 border-t border-white/10 grid grid-cols-3 gap-6">
+            <div className="pt-6 border-t border-white/10 grid grid-cols-3 gap-2 xs:gap-3 sm:gap-6">
               <div>
-                <span className="block font-serif text-2xl md:text-3xl text-ivory font-light">
+                <span className="block font-serif text-xl xs:text-2xl md:text-3xl text-ivory font-light">
                   18+
                 </span>
-                <span className="text-[10px] uppercase font-mono tracking-wider text-ivory-dark">
+                <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-wider text-ivory-dark">
                   Years Provenance
                 </span>
               </div>
               <div>
-                <span className="block font-serif text-2xl md:text-3xl text-champagne font-light">
+                <span className="block font-serif text-xl xs:text-2xl md:text-3xl text-champagne font-light">
                   140+
                 </span>
-                <span className="text-[10px] uppercase font-mono tracking-wider text-ivory-dark">
+                <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-wider text-ivory-dark">
                   Private Residencies
                 </span>
               </div>
               <div>
-                <span className="block font-serif text-2xl md:text-3xl text-ivory font-light">
+                <span className="block font-serif text-xl xs:text-2xl md:text-3xl text-ivory font-light">
                   100%
                 </span>
-                <span className="text-[10px] uppercase font-mono tracking-wider text-ivory-dark">
+                <span className="text-[9px] sm:text-[10px] uppercase font-mono tracking-wider text-ivory-dark">
                   Bespoke Craft
                 </span>
               </div>

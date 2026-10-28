@@ -203,21 +203,23 @@ export default function HeroScene() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[560px] sm:h-[640px] lg:h-[700px] rounded-3xl overflow-hidden bg-gradient-to-b from-obsidian/40 via-charcoal/30 to-obsidian border border-champagne/25 shadow-dark interactive-3d group"
+      className="relative w-full h-[460px] sm:h-[580px] lg:h-[700px] rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-obsidian/40 via-charcoal/30 to-obsidian border border-champagne/25 shadow-dark interactive-3d group"
       onPointerMove={handlePointerMove}
     >
       {/* Floating 3D Scene Controls Badge */}
-      <div className="absolute top-5 left-5 z-20 flex items-center space-x-2 bg-obsidian/90 backdrop-blur-md px-4 py-2 rounded-full border border-champagne/30 text-xs text-ivory font-mono shadow-xl">
-        <Rotate3d className="w-4 h-4 text-champagne animate-spin-slow" />
-        <span className="tracking-widest uppercase font-medium">Interactive 3D Stage</span>
+      <div className="absolute top-4 sm:top-5 left-4 sm:left-5 z-20 flex items-center space-x-1.5 sm:space-x-2 bg-obsidian/90 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-champagne/30 text-[10px] sm:text-xs text-ivory font-mono shadow-xl">
+        <Rotate3d className="w-3.5 h-3.5 text-champagne animate-spin-slow" />
+        <span className="tracking-widest uppercase font-medium">
+          <span className="hidden xs:inline">Interactive </span>3D Stage
+        </span>
       </div>
 
       {/* Top Right: Lighting Atmosphere Switcher */}
-      <div className="absolute top-5 right-5 z-20 flex items-center space-x-1.5 bg-obsidian/90 backdrop-blur-md p-1 rounded-full border border-champagne/25 shadow-xl">
+      <div className="absolute top-4 sm:top-5 right-4 sm:right-5 z-20 flex items-center space-x-1 sm:space-x-1.5 bg-obsidian/90 backdrop-blur-md p-1 rounded-full border border-champagne/25 shadow-xl">
         <button
           onClick={() => setMood("daylight")}
           title="Daylight Atelier"
-          className={`p-2 rounded-full transition-all ${
+          className={`p-1.5 sm:p-2 rounded-full transition-all ${
             mood === "daylight"
               ? "bg-champagne text-obsidian shadow-sm"
               : "text-ivory-dark hover:text-ivory"
@@ -229,7 +231,7 @@ export default function HeroScene() {
         <button
           onClick={() => setMood("sunset")}
           title="Sunset Amber"
-          className={`p-2 rounded-full transition-all ${
+          className={`p-1.5 sm:p-2 rounded-full transition-all ${
             mood === "sunset"
               ? "bg-champagne text-obsidian shadow-sm"
               : "text-ivory-dark hover:text-ivory"
@@ -241,7 +243,7 @@ export default function HeroScene() {
         <button
           onClick={() => setMood("midnight")}
           title="Midnight Mood"
-          className={`p-2 rounded-full transition-all ${
+          className={`p-1.5 sm:p-2 rounded-full transition-all ${
             mood === "midnight"
               ? "bg-champagne text-obsidian shadow-sm"
               : "text-ivory-dark hover:text-ivory"
@@ -250,13 +252,13 @@ export default function HeroScene() {
           <Moon className="w-3.5 h-3.5" />
         </button>
 
-        <div className="w-[1px] h-4 bg-white/20 mx-1" />
+        <div className="w-[1px] h-3.5 sm:h-4 bg-white/20 mx-0.5 sm:mx-1" />
 
         {/* Orbit Auto-play Toggle */}
         <button
           onClick={() => setAutoRotate(!autoRotate)}
           title={autoRotate ? "Pause Auto-orbit" : "Play Auto-orbit"}
-          className={`p-2 rounded-full transition-all ${
+          className={`p-1.5 sm:p-2 rounded-full transition-all ${
             autoRotate
               ? "bg-champagne text-obsidian"
               : "text-ivory-dark hover:text-ivory"
@@ -267,29 +269,29 @@ export default function HeroScene() {
       </div>
 
       {/* Piece Switcher Controls */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center space-x-2 bg-obsidian/95 backdrop-blur-xl p-1.5 rounded-full border border-champagne/30 shadow-2xl">
+      <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 w-[94%] sm:w-auto max-w-sm flex items-center justify-center space-x-1.5 sm:space-x-2 bg-obsidian/95 backdrop-blur-xl p-1 sm:p-1.5 rounded-full border border-champagne/30 shadow-2xl">
         <button
           onClick={() => setSelectedPiece("chair")}
-          className={`flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all duration-300 ${
+          className={`flex-1 sm:flex-initial flex items-center justify-center space-x-1.5 sm:space-x-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-mono uppercase tracking-wider transition-all duration-300 ${
             selectedPiece === "chair"
               ? "bg-champagne text-obsidian font-semibold shadow-md"
               : "text-ivory-muted hover:text-ivory hover:bg-white/5"
           }`}
         >
-          <Armchair className="w-3.5 h-3.5" />
-          <span>Lounge Armchair</span>
+          <Armchair className="w-3.5 h-3.5 flex-shrink-0" />
+          <span><span className="hidden xs:inline">Lounge </span>Armchair</span>
         </button>
 
         <button
           onClick={() => setSelectedPiece("sofa")}
-          className={`flex items-center space-x-2 px-5 py-2.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all duration-300 ${
+          className={`flex-1 sm:flex-initial flex items-center justify-center space-x-1.5 sm:space-x-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-[10px] sm:text-xs font-mono uppercase tracking-wider transition-all duration-300 ${
             selectedPiece === "sofa"
               ? "bg-champagne text-obsidian font-semibold shadow-md"
               : "text-ivory-muted hover:text-ivory hover:bg-white/5"
           }`}
         >
-          <Sofa className="w-3.5 h-3.5" />
-          <span>Curved Velvet Sofa</span>
+          <Sofa className="w-3.5 h-3.5 flex-shrink-0" />
+          <span><span className="hidden xs:inline">Curved </span>Sofa</span>
         </button>
       </div>
 

@@ -188,7 +188,7 @@ export default function SpatialLayerStack() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="bg-charcoal/70 border border-champagne/20 rounded-3xl p-8 sm:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+      className="bg-charcoal/70 border border-champagne/20 rounded-2xl sm:rounded-3xl p-5 xs:p-7 sm:p-10 md:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden"
     >
       {/* Dynamic Background radial lighting reacting to selected card */}
       <div
@@ -209,13 +209,13 @@ export default function SpatialLayerStack() {
       </div>
 
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-8 mb-12 border-b border-white/10 gap-4 relative z-20">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 sm:pb-8 mb-8 sm:mb-12 border-b border-white/10 gap-4 relative z-20">
         <div>
-          <div className="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-1.5">
+          <div className="inline-flex items-center space-x-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Interactive 3D Layer Stack</span>
           </div>
-          <h3 className="font-serif text-3xl sm:text-4xl text-ivory font-light">
+          <h3 className="font-serif text-2xl xs:text-3xl sm:text-4xl text-ivory font-light">
             Deconstructed Spatial Anatomy
           </h3>
         </div>
@@ -224,7 +224,7 @@ export default function SpatialLayerStack() {
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setIsFrontView(!isFrontView)}
-            className="flex items-center space-x-2 bg-obsidian/90 hover:bg-champagne hover:text-obsidian px-4 py-2 rounded-full border border-champagne/30 text-xs font-mono text-ivory transition-all duration-300 shadow-lg active:scale-95 group"
+            className="flex items-center space-x-2 bg-obsidian/90 hover:bg-champagne hover:text-obsidian px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-champagne/30 text-[11px] sm:text-xs font-mono text-ivory transition-all duration-300 shadow-lg active:scale-95 group"
           >
             <Eye className="w-3.5 h-3.5 text-champagne group-hover:text-obsidian transition-colors" />
             <span>{isFrontView ? "Click Card to Dock / Front" : "Inspect Front View"}</span>
@@ -232,13 +232,13 @@ export default function SpatialLayerStack() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-20">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-20">
         
         {/* Left: 3D Isometric Exploded Layer Stack Viewport (Col 7) */}
-        <div className="lg:col-span-7 relative h-[460px] sm:h-[500px] flex items-center justify-center perspective-[1200px] select-none pt-4">
+        <div className="lg:col-span-7 relative h-[400px] xs:h-[450px] sm:h-[500px] flex items-center justify-center perspective-[1200px] select-none pt-4">
           
           {/* Scroll-driven Vertical Datum Ruler with Target Node */}
-          <div className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 pointer-events-none z-30 flex flex-col items-center">
+          <div className="absolute left-1 xs:left-2 sm:left-6 top-1/2 -translate-y-1/2 pointer-events-none z-30 flex flex-col items-center">
             <svg width="24" height="260" viewBox="0 0 24 260" className="overflow-visible">
               <path
                 ref={datumPathRef}
@@ -274,7 +274,7 @@ export default function SpatialLayerStack() {
 
           {/* Main 3D Tilting Stage with Mouse Parallax */}
           <div
-            className="relative w-72 sm:w-80 md:w-88 h-48 sm:h-52 transition-transform duration-700 ease-out"
+            className="relative w-64 xs:w-72 sm:w-80 md:w-88 h-44 xs:h-48 sm:h-52 transition-transform duration-700 ease-out"
             style={{
               transformStyle: "preserve-3d",
               transform: `rotateX(${50 + mouseOffset.y}deg) rotateZ(${-36 + mouseOffset.x}deg) rotateY(${mouseOffset.x * 0.4}deg)`,
@@ -297,7 +297,7 @@ export default function SpatialLayerStack() {
                 <div
                   key={layer.id}
                   onClick={() => handleCardClick(layer.id)}
-                  className={`absolute inset-0 rounded-[22px] backdrop-blur-2xl p-5 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
+                  className={`absolute inset-0 rounded-[20px] sm:rounded-[22px] backdrop-blur-2xl p-4 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
                     isSelected
                       ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(201,166,107,0.35)]`
                       : isFrontView
@@ -310,7 +310,7 @@ export default function SpatialLayerStack() {
                   }}
                 >
                   {/* Scroll-Driven SVG Drawable Contour Path matching draw: ['0 0', '0 1', '1 1'] */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-[22px] overflow-visible">
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-[20px] sm:rounded-[22px] overflow-visible">
                     <rect
                       ref={(el) => {
                         pathRefs.current[layer.id] = el;
@@ -319,8 +319,8 @@ export default function SpatialLayerStack() {
                       y="1"
                       width="calc(100% - 2px)"
                       height="calc(100% - 2px)"
-                      rx="20"
-                      ry="20"
+                      rx="18"
+                      ry="18"
                       fill="none"
                       stroke={layer.accentColor}
                       strokeWidth={isSelected ? "1.8" : "1"}
@@ -334,9 +334,9 @@ export default function SpatialLayerStack() {
 
                   {/* Top Bar of Card */}
                   <div className="flex items-center justify-between text-xs font-mono relative z-10">
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1.5 sm:space-x-2">
                       <span
-                        className="px-3 py-0.5 rounded-full font-bold text-[12px] tracking-wide transition-all shadow-sm"
+                        className="px-2.5 sm:px-3 py-0.5 rounded-full font-bold text-[11px] sm:text-[12px] tracking-wide transition-all shadow-sm"
                         style={{
                           backgroundColor: isSelected ? layer.accentColor : "rgba(255,255,255,0.08)",
                           color: isSelected ? "#0A0A0A" : "#F4F0E8",
@@ -345,33 +345,33 @@ export default function SpatialLayerStack() {
                         {layer.tierNumber}
                       </span>
                       {isSelected && isFrontView && (
-                        <span className="text-[10px] text-champagne font-mono font-medium flex items-center space-x-1 animate-pulse">
+                        <span className="text-[9px] sm:text-[10px] text-champagne font-mono font-medium flex items-center space-x-1 animate-pulse">
                           <span>• Front Inspection</span>
                         </span>
                       )}
                     </div>
-                    <span className="text-[11px] font-mono tracking-widest text-champagne font-medium">
+                    <span className="text-[10px] sm:text-[11px] font-mono tracking-widest text-champagne font-medium">
                       {layer.elevation}
                     </span>
                   </div>
 
                   {/* Center Content with Serif Typography */}
                   <div className="relative z-10 my-auto py-1">
-                    <h4 className="font-serif text-xl sm:text-[23px] text-ivory tracking-wide leading-snug mb-1 font-normal group-hover:text-champagne transition-colors">
+                    <h4 className="font-serif text-lg xs:text-xl sm:text-[23px] text-ivory tracking-wide leading-snug mb-1 font-normal group-hover:text-champagne transition-colors">
                       {layer.title}
                     </h4>
-                    <p className="text-[11px] sm:text-xs text-ivory/70 line-clamp-1 font-serif italic">
+                    <p className="text-[10px] sm:text-xs text-ivory/70 line-clamp-1 font-serif italic">
                       {layer.material}
                     </p>
                   </div>
 
                   {/* Divider line and Bottom Tagline matching screenshot */}
-                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-ivory-dark">
+                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-[11px] text-ivory-dark">
                     <span className="text-ivory/80 font-sans tracking-wide line-clamp-1">
                       {layer.tagline}
                     </span>
                     <span
-                      className="w-3 h-3 rounded-full transition-all duration-300 flex-shrink-0 ml-2"
+                      className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300 flex-shrink-0 ml-2"
                       style={{
                         backgroundColor: layer.accentColor,
                         transform: isSelected ? "scale(1.2)" : "scale(0.9)",
@@ -448,7 +448,7 @@ export default function SpatialLayerStack() {
           </div>
 
           {/* Quick Select Buttons 05 to 01 */}
-          <div className="flex items-center space-x-3 pt-2">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
             {LAYERS.map((l) => {
               const isSelected = activeId === l.id;
               return (
@@ -458,7 +458,7 @@ export default function SpatialLayerStack() {
                     setActiveId(l.id);
                     setIsFrontView(true);
                   }}
-                  className={`w-11 h-11 rounded-full text-xs font-mono font-bold flex items-center justify-center border transition-all duration-300 ${
+                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full text-[11px] sm:text-xs font-mono font-bold flex items-center justify-center border transition-all duration-300 ${
                     isSelected
                       ? "bg-champagne text-obsidian border-champagne shadow-champagne scale-110 ring-2 ring-champagne/40"
                       : "bg-obsidian/80 text-ivory-muted border-white/10 hover:border-champagne/50 hover:text-ivory"

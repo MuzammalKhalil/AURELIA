@@ -208,11 +208,11 @@ export default function ProjectsPage() {
 
       {/* Project Detail Modal */}
       {activeProject && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-obsidian/90 backdrop-blur-xl animate-[fadeIn_0.2s_ease-out]">
-          <div className="relative w-full max-w-3xl bg-charcoal border border-champagne/30 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-obsidian/90 backdrop-blur-xl animate-[fadeIn_0.2s_ease-out]">
+          <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-charcoal border border-champagne/30 rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 shadow-2xl space-y-5 sm:space-y-6">
             <button
               onClick={() => setActiveProject(null)}
-              className="absolute top-5 right-5 w-10 h-10 rounded-full bg-obsidian border border-white/20 text-ivory hover:text-champagne flex items-center justify-center transition-colors"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-obsidian border border-white/20 text-ivory hover:text-champagne flex items-center justify-center transition-colors z-20"
             >
               <X className="w-5 h-5" />
             </button>

@@ -159,7 +159,7 @@ export default function Preloader() {
 
         {/* Brand Title */}
         <div className="space-y-2">
-          <h1 className="font-serif text-5xl sm:text-7xl md:text-8xl font-light text-ivory tracking-[0.25em]">
+          <h1 className="font-serif text-4xl xs:text-5xl sm:text-7xl md:text-8xl font-light text-ivory tracking-[0.2em] sm:tracking-[0.25em]">
             AURELIA
           </h1>
 

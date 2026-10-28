@@ -178,7 +178,7 @@ export default function ContactPage() {
               <form
                 ref={formRef}
                 onSubmit={handleSubmit}
-                className="bg-charcoal/80 border border-white/10 rounded-3xl p-8 sm:p-12 space-y-6 shadow-2xl backdrop-blur-xl"
+                className="bg-charcoal/80 border border-white/10 rounded-2xl sm:rounded-3xl p-5 xs:p-7 sm:p-10 md:p-12 space-y-6 shadow-2xl backdrop-blur-xl"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>

@@ -64,35 +64,35 @@ export default function ProductModal3D({ product, onClose }: ProductModalProps) 
   if (!product) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-obsidian/90 backdrop-blur-2xl">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2.5 sm:p-6 md:p-10 bg-obsidian/90 backdrop-blur-2xl">
       {/* Container Card */}
-      <div className="relative w-full max-w-5xl h-[88vh] bg-charcoal/95 border border-champagne/30 rounded-3xl shadow-2xl flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.3s_ease-out]">
+      <div className="relative w-full max-w-5xl h-[92vh] sm:h-[88vh] bg-charcoal/95 border border-champagne/30 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col lg:flex-row overflow-hidden animate-[fadeIn_0.3s_ease-out]">
         
         {/* Close Button */}
         <button
           onClick={onClose}
           aria-label="Close modal"
-          className="absolute top-5 right-5 z-50 w-11 h-11 rounded-full bg-obsidian/80 border border-white/15 hover:border-champagne text-ivory hover:text-champagne flex items-center justify-center transition-all shadow-xl hover:scale-105"
+          className="absolute top-3 right-3 sm:top-5 sm:right-5 z-50 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-obsidian/80 border border-white/15 hover:border-champagne text-ivory hover:text-champagne flex items-center justify-center transition-all shadow-xl hover:scale-105 active:scale-95"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
         {/* Left Side: 3D Canvas Viewport */}
-        <div className="w-full lg:w-7/12 h-[45%] lg:h-full relative bg-radial-gradient flex items-center justify-center">
+        <div className="w-full lg:w-7/12 h-[42%] sm:h-[46%] lg:h-full relative bg-radial-gradient flex items-center justify-center">
           
           {/* Top 3D Control Pills */}
-          <div className="absolute top-5 left-5 z-20 flex items-center space-x-2">
-            <div className="bg-obsidian/85 border border-white/10 px-3.5 py-1.5 rounded-full text-[11px] font-mono text-champagne flex items-center space-x-2 shadow-lg">
+          <div className="absolute top-3 sm:top-5 left-3 sm:left-5 z-20 flex items-center space-x-2">
+            <div className="bg-obsidian/85 border border-white/10 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono text-champagne flex items-center space-x-1.5 sm:space-x-2 shadow-lg">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Real-Time 3D Engine</span>
             </div>
           </div>
 
           {/* Lighting Selector Overlay */}
-          <div className="absolute bottom-5 left-5 z-20 flex items-center space-x-2 bg-obsidian/85 border border-white/10 p-1.5 rounded-full shadow-lg">
+          <div className="absolute bottom-3 sm:bottom-5 left-3 sm:left-5 z-20 flex items-center space-x-1 sm:space-x-2 bg-obsidian/85 border border-white/10 p-1 sm:p-1.5 rounded-full shadow-lg">
             <button
               onClick={() => setLightMood("day")}
-              className={`px-3 py-1.5 rounded-full text-[11px] font-mono flex items-center space-x-1.5 transition-all ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono flex items-center space-x-1 sm:space-x-1.5 transition-all ${
                 lightMood === "day"
                   ? "bg-champagne text-obsidian font-bold shadow-champagne"
                   : "text-ivory-dark hover:text-ivory"
@@ -103,7 +103,7 @@ export default function ProductModal3D({ product, onClose }: ProductModalProps) 
             </button>
             <button
               onClick={() => setLightMood("sunset")}
-              className={`px-3 py-1.5 rounded-full text-[11px] font-mono flex items-center space-x-1.5 transition-all ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono flex items-center space-x-1 sm:space-x-1.5 transition-all ${
                 lightMood === "sunset"
                   ? "bg-champagne text-obsidian font-bold shadow-champagne"
                   : "text-ivory-dark hover:text-ivory"
@@ -114,7 +114,7 @@ export default function ProductModal3D({ product, onClose }: ProductModalProps) 
             </button>
             <button
               onClick={() => setLightMood("night")}
-              className={`px-3 py-1.5 rounded-full text-[11px] font-mono flex items-center space-x-1.5 transition-all ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-[11px] font-mono flex items-center space-x-1 sm:space-x-1.5 transition-all ${
                 lightMood === "night"
                   ? "bg-champagne text-obsidian font-bold shadow-champagne"
                   : "text-ivory-dark hover:text-ivory"
@@ -182,7 +182,7 @@ export default function ProductModal3D({ product, onClose }: ProductModalProps) 
         </div>
 
         {/* Right Side: Architectural Ledger & Specs */}
-        <div className="w-full lg:w-5/12 h-[55%] lg:h-full p-6 sm:p-8 md:p-10 flex flex-col justify-between overflow-y-auto border-t lg:border-t-0 lg:border-l border-white/10">
+        <div className="w-full lg:w-5/12 h-[58%] sm:h-[54%] lg:h-full p-5 sm:p-7 md:p-10 flex flex-col justify-between overflow-y-auto border-t lg:border-t-0 lg:border-l border-white/10">
           <div className="space-y-6">
             <div>
               <div className="inline-flex items-center space-x-2 text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-2">

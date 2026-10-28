@@ -43,10 +43,10 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="group flex flex-col">
-          <span className="font-serif text-2xl md:text-3xl font-light tracking-[0.25em] text-ivory group-hover:text-champagne transition-colors">
+          <span className="font-serif text-xl sm:text-2xl md:text-3xl font-light tracking-[0.2em] sm:tracking-[0.25em] text-ivory group-hover:text-champagne transition-colors">
             AURELIA
           </span>
-          <span className="text-[9px] uppercase tracking-[0.35em] text-champagne/80 font-mono -mt-1">
+          <span className="text-[8px] sm:text-[9px] uppercase tracking-[0.3em] sm:tracking-[0.35em] text-champagne/80 font-mono -mt-1">
             Atelier & Interiors
           </span>
         </Link>
@@ -96,28 +96,28 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 top-[73px] bg-obsidian/95 backdrop-blur-2xl z-40 border-t border-champagne/15 flex flex-col px-8 py-10 space-y-6">
-          <div className="flex flex-col space-y-5">
+        <div className="lg:hidden fixed inset-0 top-[65px] sm:top-[73px] bg-obsidian/95 backdrop-blur-2xl z-40 border-t border-champagne/15 flex flex-col px-6 sm:px-8 py-8 space-y-6 overflow-y-auto max-h-[calc(100vh-65px)]">
+          <div className="flex flex-col space-y-4">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="font-serif text-2xl tracking-widest text-ivory hover:text-champagne transition-colors"
+                className="font-serif text-2xl tracking-widest text-ivory hover:text-champagne transition-colors py-1"
               >
                 {link.name}
               </Link>
             ))}
           </div>
 
-          <div className="pt-8 border-t border-white/10 flex flex-col space-y-4">
-            <span className="text-xs uppercase tracking-widest text-champagne">
+          <div className="pt-6 border-t border-white/10 flex flex-col space-y-3">
+            <span className="text-[11px] uppercase tracking-widest text-champagne font-mono">
               Direct Inquiries
             </span>
-            <p className="text-sm text-ivory-muted">concierge@aurelia-atelier.com</p>
-            <p className="text-sm text-ivory-muted">+1 (212) 890-4420</p>
+            <p className="text-xs sm:text-sm text-ivory-muted font-mono">concierge@aurelia-atelier.com</p>
+            <p className="text-xs sm:text-sm text-ivory-muted font-mono">+1 (212) 890-4420</p>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center space-x-2 text-xs uppercase tracking-[0.2em] font-medium text-obsidian bg-champagne px-6 py-3 rounded-full mt-2"
+              className="inline-flex items-center justify-center space-x-2 text-xs uppercase tracking-[0.2em] font-medium text-obsidian bg-champagne hover:bg-champagne-300 px-6 py-3 rounded-full mt-2 shadow-champagne transition-all"
             >
               <span>Request Private Consultation</span>
               <ArrowUpRight className="w-4 h-4" />

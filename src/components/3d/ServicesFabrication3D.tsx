@@ -84,27 +84,27 @@ export default function ServicesFabrication3D() {
   return (
     <div
       ref={ref}
-      className="relative w-full h-[520px] sm:h-[580px] rounded-3xl bg-charcoal border border-champagne/30 overflow-hidden shadow-2xl flex flex-col justify-between"
+      className="relative w-full h-[460px] sm:h-[540px] lg:h-[580px] rounded-2xl sm:rounded-3xl bg-charcoal border border-champagne/30 overflow-hidden shadow-2xl flex flex-col justify-between"
     >
       {/* Top Bar with Switchers */}
-      <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 z-20 bg-gradient-to-b from-obsidian/90 via-obsidian/60 to-transparent">
+      <div className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 z-20 bg-gradient-to-b from-obsidian/90 via-obsidian/60 to-transparent">
         <div>
-          <div className="flex items-center space-x-2 text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-1">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-1">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Artisanal Fabrication Workbench</span>
           </div>
-          <h4 className="font-serif text-2xl text-ivory font-light">
+          <h4 className="font-serif text-xl sm:text-2xl text-ivory font-light">
             {current.title}
           </h4>
         </div>
 
         {/* Model Switcher Pills & Wireframe Toggle */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {(["chair", "lamp", "table"] as ServiceModelKey[]).map((key) => (
             <button
               key={key}
               onClick={() => setSelectedPiece(key)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all ${
+              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-mono uppercase tracking-wider transition-all ${
                 selectedPiece === key
                   ? "bg-champagne text-obsidian font-bold shadow-champagne scale-105"
                   : "bg-obsidian/80 text-ivory-dark border border-white/10 hover:border-champagne/50 hover:text-ivory"
@@ -116,7 +116,7 @@ export default function ServicesFabrication3D() {
 
           <button
             onClick={() => setWireframe(!wireframe)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider border flex items-center space-x-1.5 transition-all ${
+            className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-mono uppercase tracking-wider border flex items-center space-x-1.5 transition-all ${
               wireframe
                 ? "bg-champagne text-obsidian border-champagne font-bold"
                 : "bg-obsidian/80 text-ivory-muted border-white/10 hover:border-champagne/50"

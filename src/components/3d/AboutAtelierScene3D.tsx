@@ -37,12 +37,14 @@ export default function AboutAtelierScene3D() {
   return (
     <div
       ref={ref}
-      className="relative w-full h-[480px] sm:h-[540px] rounded-3xl bg-charcoal border border-champagne/30 overflow-hidden shadow-2xl flex items-center justify-center"
+      className="relative w-full h-[380px] xs:h-[440px] sm:h-[500px] lg:h-[540px] rounded-2xl sm:rounded-3xl bg-charcoal border border-champagne/30 overflow-hidden shadow-2xl flex items-center justify-center"
     >
       {/* Top Badge */}
-      <div className="absolute top-5 left-5 z-20 flex items-center space-x-2 bg-obsidian/85 border border-champagne/25 px-4 py-2 rounded-full text-xs font-mono text-champagne backdrop-blur-md shadow-lg">
+      <div className="absolute top-4 sm:top-5 left-4 sm:left-5 z-20 flex items-center space-x-1.5 sm:space-x-2 bg-obsidian/85 border border-champagne/25 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-mono text-champagne backdrop-blur-md shadow-lg">
         <Sparkles className="w-3.5 h-3.5" />
-        <span>Atelier Sculpture Pedestal • Real-Time 3D</span>
+        <span>
+          <span className="hidden sm:inline">Atelier Sculpture Pedestal • </span>Real-Time 3D
+        </span>
       </div>
 
       <div className="absolute top-5 right-5 z-20 hidden sm:flex items-center space-x-1.5 text-[10px] font-mono text-ivory-dark bg-obsidian/75 px-3 py-1.5 rounded-full border border-white/10">

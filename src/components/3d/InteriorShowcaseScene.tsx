@@ -248,11 +248,11 @@ export default function InteriorShowcaseScene() {
         </div>
 
         {/* Clickable Quick Jump Stops */}
-        <div className="pointer-events-auto flex items-center space-x-2 bg-charcoal/80 backdrop-blur-md p-1.5 rounded-full border border-champagne/25 shadow-xl">
-          <div className="flex items-center space-x-1 pr-2 border-r border-white/15">
+        <div className="pointer-events-auto flex items-center space-x-1.5 sm:space-x-2 bg-charcoal/80 backdrop-blur-md p-1 sm:p-1.5 rounded-full border border-champagne/25 shadow-xl max-w-full overflow-x-auto">
+          <div className="flex items-center space-x-1 pr-1.5 sm:pr-2 border-r border-white/15">
             <button
               onClick={() => setRoomMood("day")}
-              className={`px-2 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all ${
+              className={`px-2 py-1 rounded-full text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-all ${
                 roomMood === "day" ? "bg-champagne text-obsidian font-bold" : "text-ivory-dark hover:text-ivory"
               }`}
             >
@@ -260,7 +260,7 @@ export default function InteriorShowcaseScene() {
             </button>
             <button
               onClick={() => setRoomMood("golden")}
-              className={`px-2 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all ${
+              className={`px-2 py-1 rounded-full text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-all ${
                 roomMood === "golden" ? "bg-champagne text-obsidian font-bold" : "text-ivory-dark hover:text-ivory"
               }`}
             >
@@ -268,7 +268,7 @@ export default function InteriorShowcaseScene() {
             </button>
             <button
               onClick={() => setRoomMood("night")}
-              className={`px-2 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all ${
+              className={`px-2 py-1 rounded-full text-[9px] sm:text-[10px] font-mono uppercase tracking-wider transition-all ${
                 roomMood === "night" ? "bg-champagne text-obsidian font-bold" : "text-ivory-dark hover:text-ivory"
               }`}
             >
@@ -282,7 +282,7 @@ export default function InteriorShowcaseScene() {
                 setManualStop(i);
                 setActiveStopIndex(i);
               }}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all duration-300 ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono transition-all duration-300 ${
                 activeStopIndex === i
                   ? "bg-champagne text-obsidian font-bold shadow-sm"
                   : "text-ivory-muted hover:text-ivory hover:bg-white/5"
@@ -335,21 +335,21 @@ export default function InteriorShowcaseScene() {
       </div>
 
       {/* Bottom Curatorial Card (Synchronized with Viewpoint) */}
-      <div className="relative z-30 pb-10 px-6 md:px-12 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto w-full max-w-2xl bg-obsidian/90 backdrop-blur-xl border border-champagne/30 rounded-2xl p-6 sm:p-8 shadow-2xl transition-all duration-500">
-          <div className="flex items-center justify-between pb-3 border-b border-champagne/15">
-            <span className="text-xs uppercase font-mono tracking-widest text-champagne">
+      <div className="relative z-30 pb-6 sm:pb-10 px-4 sm:px-6 md:px-12 flex justify-center pointer-events-none">
+        <div className="pointer-events-auto w-full max-w-2xl bg-obsidian/90 backdrop-blur-xl border border-champagne/30 rounded-2xl p-5 sm:p-8 shadow-2xl transition-all duration-500">
+          <div className="flex items-center justify-between pb-2.5 sm:pb-3 border-b border-champagne/15">
+            <span className="text-[10px] sm:text-xs uppercase font-mono tracking-widest text-champagne line-clamp-1">
               {currentStop.subtitle}
             </span>
-            <span className="text-xs font-mono text-ivory-dark">
+            <span className="text-[10px] sm:text-xs font-mono text-ivory-dark flex-shrink-0 ml-2">
               STOP 0{currentStop.id + 1} / 04
             </span>
           </div>
 
-          <h3 className="font-serif text-2xl sm:text-3xl text-ivory mt-3 mb-2 font-light">
+          <h3 className="font-serif text-xl sm:text-2xl md:text-3xl text-ivory mt-2.5 sm:mt-3 mb-1.5 sm:mb-2 font-light">
             {currentStop.title}
           </h3>
-          <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed font-light">
+          <p className="text-[11px] sm:text-xs md:text-sm text-ivory-muted leading-relaxed font-light line-clamp-3 sm:line-clamp-none">
             {currentStop.description}
           </p>
 

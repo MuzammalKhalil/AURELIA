@@ -16,15 +16,20 @@
     background-color: #0A0A0A;
     color: #F4F0E8;
     color-scheme: dark;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 
   body {
     background-color: #0A0A0A;
     color: #F4F0E8;
     overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
     font-family: var(--font-outfit);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
   }
 
   ::selection {

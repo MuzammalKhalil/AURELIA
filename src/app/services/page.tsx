@@ -147,7 +147,7 @@ export default function ServicesPage() {
         <div ref={tiersRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {serviceTiers.map((tier, idx) => (
             <Tilt3D key={tier.tier} maxTilt={8} scale={1.02}>
-              <div className="h-full bg-charcoal/80 border border-white/10 hover:border-champagne/50 rounded-3xl p-8 sm:p-10 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl group relative backdrop-blur-xl">
+              <div className="h-full bg-charcoal/80 border border-white/10 hover:border-champagne/50 rounded-2xl sm:rounded-3xl p-6 sm:p-10 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl group relative backdrop-blur-xl">
                 <div>
                   <div className="flex items-center justify-between pb-6 border-b border-white/10">
                     <span className="font-mono text-[10px] uppercase tracking-widest text-champagne">

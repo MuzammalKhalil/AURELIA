@@ -134,13 +134,13 @@ export default function SpacesPage() {
         </div>
 
         {/* CTA Bar */}
-        <div className="bg-obsidian border border-champagne/20 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-xl bg-champagne/10 border border-champagne/30 flex items-center justify-center text-champagne">
+        <div className="bg-obsidian border border-champagne/20 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-2xl">
+          <div className="flex items-start sm:items-center space-x-4">
+            <div className="w-12 h-12 rounded-xl bg-champagne/10 border border-champagne/30 flex items-center justify-center text-champagne flex-shrink-0 mt-0.5 sm:mt-0">
               <Compass className="w-6 h-6" />
             </div>
             <div>
-              <span className="font-serif text-xl text-ivory block">
+              <span className="font-serif text-lg sm:text-xl text-ivory block">
                 Commission a Custom 3D Architectural Walkthrough
               </span>
               <span className="text-xs text-ivory-muted font-light">
@@ -150,7 +150,7 @@ export default function SpacesPage() {
           </div>
           <Link
             href="/contact"
-            className="bg-champagne hover:bg-champagne-light text-obsidian px-6 py-3 rounded-full text-xs font-mono uppercase tracking-widest font-semibold flex items-center space-x-2 transition-all shadow-champagne flex-shrink-0"
+            className="w-full sm:w-auto text-center justify-center bg-champagne hover:bg-champagne-300 text-obsidian px-6 py-3 rounded-full text-xs font-mono uppercase tracking-widest font-semibold flex items-center space-x-2 transition-all shadow-champagne flex-shrink-0"
           >
             <span>Inquire on Spatial Project</span>
             <ArrowUpRight className="w-4 h-4" />
