@@ -342,7 +342,7 @@ export default function InteriorShowcaseScene() {
               {currentStop.subtitle}
             </span>
             <span className="text-xs font-mono text-ivory-dark">
-              STOP 0{currentStop.id + 1} // 04
+              STOP 0{currentStop.id + 1} / 04
             </span>
           </div>
 
