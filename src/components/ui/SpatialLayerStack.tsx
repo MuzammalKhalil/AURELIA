@@ -30,71 +30,71 @@ const LAYERS: LayerData[] = [
     category: "Tier 05 • Objets d'Art",
     material: "Lost-wax cast champagne bronze & feldspar stoneware",
     spec: "Cast bronze edition 3 of 8 • Natural chalk satin glaze",
-    elevation: "+260 mm",
+    elevation: "+260 MM",
     elevationVal: 260,
     accentColor: "#C9A66B",
-    bgGradient: "from-champagne/25 via-charcoal to-obsidian",
+    bgGradient: "from-champagne/20 via-charcoal/95 to-obsidian",
     borderColor: "border-champagne",
     description: "Numbered bronze sculptures and organic stoneware vessels that catch raking daylight and anchor the room's emotional soul.",
   },
   {
     id: 3,
     tierNumber: "04",
-    title: "Circadian Lighting Datum",
+    title: "Circadian Luminaire Network",
     tagline: "Atmospheric Luminaire Network",
     category: "Tier 04 • Architectural Lighting",
     material: "Hand-patinated antique brass & 2700K warm LED reveals",
-    spec: "CRI 98 color fidelity • Hidden baseboard and ceiling reveals",
-    elevation: "+195 mm",
+    spec: "CRI 98 color fidelity • Diurnal circadian synchronization",
+    elevation: "+195 MM",
     elevationVal: 195,
-    accentColor: "#FFE3B3",
-    bgGradient: "from-champagne-300/20 via-charcoal to-obsidian",
-    borderColor: "border-champagne/70",
+    accentColor: "#E2C18D",
+    bgGradient: "from-champagne-300/15 via-charcoal/95 to-obsidian",
+    borderColor: "border-champagne/60",
     description: "Low-glare directional shadow casting calibrated to diurnal daylight progression for deep psychological calm.",
   },
   {
     id: 2,
     tierNumber: "03",
-    title: "Tactile Bouclé Upholstery",
+    title: "Tactile Acoustic Envelopes",
     tagline: "Sensory Ergonomics",
     category: "Tier 03 • Haute Upholstery",
     material: "Alpine shearling wool & unbleached Belgian linen",
     spec: "Biella Piedmont weave • 100,000 Martindale durability rating",
-    elevation: "+130 mm",
+    elevation: "+130 MM",
     elevationVal: 130,
-    accentColor: "#F4F0E8",
-    bgGradient: "from-white/20 via-charcoal to-obsidian",
-    borderColor: "border-ivory/60",
+    accentColor: "#D8C7B0",
+    bgGradient: "from-stone-300/15 via-charcoal/95 to-obsidian",
+    borderColor: "border-ivory/50",
     description: "Cloud-soft textured looped bouclé that cushions the body while creating rich acoustic dampening throughout the salon.",
   },
   {
     id: 1,
     tierNumber: "02",
-    title: "Acoustic Timber Joinery",
+    title: "Monolithic Joinery",
     tagline: "Structural Architectural Millwork",
     category: "Tier 02 • Precision Joinery",
     material: "Canaletto walnut & natural acoustic damping felt core",
     spec: "Millimeter shadow-line reveals • Low-VOC organic oil finish",
-    elevation: "+65 mm",
+    elevation: "+65 MM",
     elevationVal: 65,
-    accentColor: "#D4B37A",
-    bgGradient: "from-amber-950/30 via-charcoal to-obsidian",
-    borderColor: "border-champagne/50",
+    accentColor: "#C2A377",
+    bgGradient: "from-amber-900/20 via-charcoal/95 to-obsidian",
+    borderColor: "border-champagne/40",
     description: "Slatted acoustic wood paneling attenuating sound reverberations down to 0.45 seconds for whisper-quiet intimacy.",
   },
   {
     id: 0,
     tierNumber: "01",
-    title: "Monolithic Stone Plinth",
+    title: "Subterranean Foundation Substrate",
     tagline: "Foundation Substrate",
     category: "Tier 01 • Architectural Mass",
     material: "Roman vein-cut Tivoli travertine & obsidian slate",
     spec: "Honed cross-cut extraction • 40mm solid slab perimeter",
-    elevation: "0.0 mm",
+    elevation: "0.0 MM",
     elevationVal: 0,
-    accentColor: "#A39682",
-    bgGradient: "from-stone-800/40 via-charcoal to-obsidian",
-    borderColor: "border-white/30",
+    accentColor: "#9E907B",
+    bgGradient: "from-stone-800/30 via-charcoal/95 to-obsidian",
+    borderColor: "border-white/20",
     description: "Massive thermal stone slabs providing organic gravitas, thermal regulation, and structural grounding.",
   },
 ];
@@ -200,6 +200,14 @@ export default function SpatialLayerStack() {
         }}
       />
 
+      {/* Top-Left Decorative Architectural Orbital Ring matching master design */}
+      <div className="absolute top-6 left-6 pointer-events-none z-10 hidden sm:block">
+        <div className="w-20 h-20 rounded-full border border-champagne/30 relative">
+          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-champagne shadow-[0_0_10px_#C9A66B]" />
+          <div className="w-full h-full rounded-full border border-white/5 scale-75" />
+        </div>
+      </div>
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-8 mb-12 border-b border-white/10 gap-4 relative z-20">
         <div>
@@ -276,36 +284,33 @@ export default function SpatialLayerStack() {
             {LAYERS.map((layer) => {
               const isSelected = activeId === layer.id;
               
-              // Base spacing in isometric stack
+              // Base spacing in isometric stack (Tier 01 at bottom to Tier 05 at top)
               const baseElevation = layer.id * 48;
 
               // When clicked/selected and in front-facing view:
               // The card counter-rotates and moves forward into the foreground facing the camera!
               const bringToFrontTransform = isSelected && isFrontView
-                ? `translateZ(${baseElevation + 160}px) translateY(-35px) rotateZ(35deg) rotateX(-48deg) scale(1.15)`
-                : `translateZ(${isSelected ? baseElevation + 42 : baseElevation}px) scale(${isSelected ? 1.04 : 1})`;
+                ? `translateZ(${baseElevation + 230}px) translateY(-24px) rotateZ(${36 - mouseOffset.x}deg) rotateX(${-50 - mouseOffset.y}deg) scale(1.18)`
+                : `translateZ(${isSelected ? baseElevation + 45 : baseElevation}px) scale(${isSelected ? 1.05 : 1})`;
 
               return (
                 <div
                   key={layer.id}
                   onClick={() => handleCardClick(layer.id)}
-                  className={`absolute inset-0 rounded-2xl backdrop-blur-xl p-5 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group ${
+                  className={`absolute inset-0 rounded-[22px] backdrop-blur-2xl p-5 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
                     isSelected
-                      ? `bg-gradient-to-br ${layer.bgGradient} z-30 ring-1 ring-champagne/60`
+                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(201,166,107,0.35)]`
                       : isFrontView
-                      ? "bg-obsidian/90 opacity-40 hover:opacity-80 z-10"
-                      : "bg-obsidian/85 opacity-75 hover:opacity-100 z-10"
+                      ? "bg-[#0E0E0E]/90 border border-white/10 opacity-30 blur-[0.5px] hover:opacity-75 z-10"
+                      : "bg-[#0E0E0E]/90 border border-white/10 opacity-70 hover:opacity-100 z-10"
                   }`}
                   style={{
                     transform: bringToFrontTransform,
                     transformStyle: "preserve-3d",
-                    boxShadow: isSelected
-                      ? `0 35px 70px -15px rgba(0, 0, 0, 0.95), 0 0 50px ${layer.accentColor}40, inset 0 0 20px ${layer.accentColor}25`
-                      : "0 10px 30px -10px rgba(0, 0, 0, 0.8)",
                   }}
                 >
                   {/* Scroll-Driven SVG Drawable Contour Path matching draw: ['0 0', '0 1', '1 1'] */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-2xl overflow-visible">
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-[22px] overflow-visible">
                     <rect
                       ref={(el) => {
                         pathRefs.current[layer.id] = el;
@@ -314,29 +319,24 @@ export default function SpatialLayerStack() {
                       y="1"
                       width="calc(100% - 2px)"
                       height="calc(100% - 2px)"
-                      rx="16"
-                      ry="16"
+                      rx="20"
+                      ry="20"
                       fill="none"
                       stroke={layer.accentColor}
-                      strokeWidth={isSelected ? "2" : "1.2"}
-                      opacity={isSelected ? "1" : "0.5"}
+                      strokeWidth={isSelected ? "1.8" : "1"}
+                      opacity={isSelected ? "1" : "0.4"}
                       className="transition-colors duration-500"
                       style={{
-                        filter: isSelected ? `drop-shadow(0 0 8px ${layer.accentColor})` : "none",
+                        filter: isSelected ? `drop-shadow(0 0 10px ${layer.accentColor})` : "none",
                       }}
                     />
                   </svg>
-
-                  {/* Subtle specular sheen shine on active front card */}
-                  {isSelected && (
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-80" />
-                  )}
 
                   {/* Top Bar of Card */}
                   <div className="flex items-center justify-between text-xs font-mono relative z-10">
                     <div className="flex items-center space-x-2">
                       <span
-                        className="px-2.5 py-0.5 rounded-full font-bold text-[11px] transition-all"
+                        className="px-3 py-0.5 rounded-full font-bold text-[12px] tracking-wide transition-all shadow-sm"
                         style={{
                           backgroundColor: isSelected ? layer.accentColor : "rgba(255,255,255,0.08)",
                           color: isSelected ? "#0A0A0A" : "#F4F0E8",
@@ -346,34 +346,36 @@ export default function SpatialLayerStack() {
                       </span>
                       {isSelected && isFrontView && (
                         <span className="text-[10px] text-champagne font-mono font-medium flex items-center space-x-1 animate-pulse">
-                          <span>• Front View</span>
+                          <span>• Front Inspection</span>
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-champagne/90">
+                    <span className="text-[11px] font-mono tracking-widest text-champagne font-medium">
                       {layer.elevation}
                     </span>
                   </div>
 
-                  {/* Center Content */}
-                  <div className="relative z-10 my-1">
-                    <h4 className="font-serif text-lg sm:text-2xl text-ivory tracking-wide leading-tight mb-1 font-normal group-hover:text-champagne transition-colors">
+                  {/* Center Content with Serif Typography */}
+                  <div className="relative z-10 my-auto py-1">
+                    <h4 className="font-serif text-xl sm:text-[23px] text-ivory tracking-wide leading-snug mb-1 font-normal group-hover:text-champagne transition-colors">
                       {layer.title}
                     </h4>
-                    <p className="text-[11px] sm:text-xs text-ivory-muted line-clamp-1 font-light">
+                    <p className="text-[11px] sm:text-xs text-ivory/70 line-clamp-1 font-serif italic">
                       {layer.material}
                     </p>
                   </div>
 
-                  {/* Bottom Indicator */}
-                  <div className="flex items-center justify-between pt-2 border-t border-white/10 text-[10px] font-mono text-ivory-dark relative z-10">
-                    <span className="line-clamp-1">{layer.tagline}</span>
+                  {/* Divider line and Bottom Tagline matching screenshot */}
+                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-ivory-dark">
+                    <span className="text-ivory/80 font-sans tracking-wide line-clamp-1">
+                      {layer.tagline}
+                    </span>
                     <span
-                      className="w-2.5 h-2.5 rounded-full transition-transform duration-300"
+                      className="w-3 h-3 rounded-full transition-all duration-300 flex-shrink-0 ml-2"
                       style={{
                         backgroundColor: layer.accentColor,
-                        transform: isSelected ? "scale(1.5)" : "scale(1)",
-                        boxShadow: isSelected ? `0 0 10px ${layer.accentColor}` : "none",
+                        transform: isSelected ? "scale(1.2)" : "scale(0.9)",
+                        boxShadow: isSelected ? `0 0 12px ${layer.accentColor}` : "none",
                       }}
                     />
                   </div>
