@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Camera, ChevronRight } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
+import { getAssetPath } from "@/lib/assets";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -51,10 +52,10 @@ const STORY_STOPS = [
 
 // Interior 3D Room Architecture Component with memoized primitives
 function InteriorRoom() {
-  const chairGltf = useGLTF("/models/luxury-chair.glb");
-  const lampGltf = useGLTF("/models/brass-lamp.glb");
-  const tableGltf = useGLTF("/models/side-table.glb");
-  const vaseGltf = useGLTF("/models/ceramic-vase.glb");
+  const chairGltf = useGLTF(getAssetPath("/models/luxury-chair.glb"));
+  const lampGltf = useGLTF(getAssetPath("/models/brass-lamp.glb"));
+  const tableGltf = useGLTF(getAssetPath("/models/side-table.glb"));
+  const vaseGltf = useGLTF(getAssetPath("/models/ceramic-vase.glb"));
 
   const chairScene = useMemo(() => chairGltf.scene.clone(), [chairGltf.scene]);
   const lampScene = useMemo(() => lampGltf.scene.clone(), [lampGltf.scene]);

@@ -6,6 +6,7 @@ import { useGLTF, OrbitControls, ContactShadows, Float } from "@react-three/drei
 import * as THREE from "three";
 import { useInView } from "@/hooks/useInView";
 import { Sparkles, Layers, RotateCw, Box } from "lucide-react";
+import { getAssetPath } from "@/lib/assets";
 
 type ServiceModelKey = "chair" | "lamp" | "table";
 
@@ -60,19 +61,19 @@ export default function ServicesFabrication3D() {
 
   const configs: Record<ServiceModelKey, { path: string; scale: number; title: string; spec: string }> = {
     chair: {
-      path: "/models/luxury-chair.glb",
+      path: getAssetPath("/models/luxury-chair.glb"),
       scale: 1.15,
       title: "Bespoke Sculptural Lounge Chair",
       spec: "Alpine Bouclé Wool & Solid Canaletto Walnut",
     },
     lamp: {
-      path: "/models/brass-lamp.glb",
+      path: getAssetPath("/models/brass-lamp.glb"),
       scale: 0.5,
       title: "Lanterne Brutaliste Brass Luminaire",
       spec: "Hand-Patinated Antique Brass & 2700K Warm LED",
     },
     table: {
-      path: "/models/side-table.glb",
+      path: getAssetPath("/models/side-table.glb"),
       scale: 1.3,
       title: "Tivoli Roman Travertine Monolith",
       spec: "Vein-cut Honed Travertine • 40mm Solid Slab",

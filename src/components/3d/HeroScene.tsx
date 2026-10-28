@@ -10,10 +10,11 @@ import {
 import * as THREE from "three";
 import { Sofa, Armchair, Rotate3d, Compass, Sun, Moon, Sunset, Play, Pause } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
+import { getAssetPath } from "@/lib/assets";
 
 // Preload models
-useGLTF.preload("/models/luxury-chair.glb");
-useGLTF.preload("/models/luxury-sofa.glb");
+useGLTF.preload(getAssetPath("/models/luxury-chair.glb"));
+useGLTF.preload(getAssetPath("/models/luxury-sofa.glb"));
 
 type LightingMood = "daylight" | "sunset" | "midnight";
 
@@ -24,7 +25,7 @@ function LuxuryChairModel({
   mouse: React.MutableRefObject<[number, number]>;
   autoRotate: boolean;
 }) {
-  const { scene } = useGLTF("/models/luxury-chair.glb");
+  const { scene } = useGLTF(getAssetPath("/models/luxury-chair.glb"));
   const groupRef = useRef<THREE.Group>(null);
   const cloned = useMemo(() => scene.clone(), [scene]);
 
@@ -64,7 +65,7 @@ function LuxurySofaModel({
   mouse: React.MutableRefObject<[number, number]>;
   autoRotate: boolean;
 }) {
-  const { scene } = useGLTF("/models/luxury-sofa.glb");
+  const { scene } = useGLTF(getAssetPath("/models/luxury-sofa.glb"));
   const groupRef = useRef<THREE.Group>(null);
   const cloned = useMemo(() => scene.clone(), [scene]);
 

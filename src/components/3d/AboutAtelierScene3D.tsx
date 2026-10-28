@@ -6,9 +6,10 @@ import { useGLTF, OrbitControls, ContactShadows, Float } from "@react-three/drei
 import * as THREE from "three";
 import { useInView } from "@/hooks/useInView";
 import { Sparkles, Eye } from "lucide-react";
+import { getAssetPath } from "@/lib/assets";
 
 function PedestalArt() {
-  const { scene: sculpture } = useGLTF("/models/sculptural-art.glb");
+  const { scene: sculpture } = useGLTF(getAssetPath("/models/sculptural-art.glb"));
   const meshRef = useRef<THREE.Group>(null);
 
   useFrame((_, delta) => {

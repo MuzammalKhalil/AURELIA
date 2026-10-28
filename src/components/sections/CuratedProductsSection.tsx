@@ -8,6 +8,7 @@ import ProductModal3D from "@/components/3d/ProductModal3D";
 import { Sparkles, Eye, Compass, ArrowUpRight, Check, Box } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { getAssetPath } from "@/lib/assets";
 
 export interface DecorProduct {
   id: string;
@@ -29,7 +30,7 @@ const PRODUCTS: DecorProduct[] = [
     title: "Aurelia Monolith Lounge Armchair",
     category: "Seating",
     material: "Alpine Bouclé Wool & American Canaletto Walnut",
-    modelPath: "/models/luxury-chair.glb",
+    modelPath: getAssetPath("/models/luxury-chair.glb"),
     scale: 1.15,
     dimensions: "W 92cm × D 88cm × H 76cm",
     edition: "Numbered Series of 12",
@@ -46,7 +47,7 @@ const PRODUCTS: DecorProduct[] = [
     title: "Velvet Salon Curved Sofa",
     category: "Seating",
     material: "Smoked Charcoal Velvet & Brushed Antique Brass",
-    modelPath: "/models/luxury-sofa.glb",
+    modelPath: getAssetPath("/models/luxury-sofa.glb"),
     scale: 0.9,
     dimensions: "W 240cm × D 110cm × H 74cm",
     edition: "Atelier Made-to-Order",
@@ -62,7 +63,7 @@ const PRODUCTS: DecorProduct[] = [
     title: "Lanterne Brutaliste Brass Luminaire",
     category: "Lighting",
     material: "Hand-Patinated Antique Brass & 2700K Warm LED",
-    modelPath: "/models/brass-lamp.glb",
+    modelPath: getAssetPath("/models/brass-lamp.glb"),
     scale: 0.5,
     dimensions: "H 56cm × W 28cm × D 28cm",
     edition: "Numbered Cast of 20",
@@ -74,7 +75,7 @@ const PRODUCTS: DecorProduct[] = [
     title: "Vessel No. VII 'Solitude'",
     category: "Objets",
     material: "Matte Ivory Feldspathic Stoneware",
-    modelPath: "/models/ceramic-vase.glb",
+    modelPath: getAssetPath("/models/ceramic-vase.glb"),
     scale: 1.5,
     dimensions: "H 42cm × Ø 24cm",
     edition: "Woodfire Kiln Series",
@@ -86,7 +87,7 @@ const PRODUCTS: DecorProduct[] = [
     title: "Infinitum Ribbon IV Bronze",
     category: "Objets",
     material: "Lost-Wax Cast Champagne Bronze on Nero Marquina",
-    modelPath: "/models/sculptural-art.glb",
+    modelPath: getAssetPath("/models/sculptural-art.glb"),
     scale: 0.8,
     dimensions: "H 48cm × W 32cm × D 30cm",
     edition: "Cast Edition 3 of 8",
@@ -98,7 +99,7 @@ const PRODUCTS: DecorProduct[] = [
     title: "Tivoli Roman Travertine Monolith",
     category: "Monoliths",
     material: "Roman Vein-Cut Tivoli Travertine Slab",
-    modelPath: "/models/side-table.glb",
+    modelPath: getAssetPath("/models/side-table.glb"),
     scale: 1.25,
     dimensions: "W 65cm × D 65cm × H 46cm",
     edition: "Honed Monolith 1-of-1",

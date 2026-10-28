@@ -6,11 +6,12 @@ import { useGLTF, ContactShadows, Float } from "@react-three/drei";
 import * as THREE from "three";
 import { Sparkles, Info } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
+import { getAssetPath } from "@/lib/assets";
 
-useGLTF.preload("/models/ceramic-vase.glb");
-useGLTF.preload("/models/brass-lamp.glb");
-useGLTF.preload("/models/sculptural-art.glb");
-useGLTF.preload("/models/side-table.glb");
+useGLTF.preload(getAssetPath("/models/ceramic-vase.glb"));
+useGLTF.preload(getAssetPath("/models/brass-lamp.glb"));
+useGLTF.preload(getAssetPath("/models/sculptural-art.glb"));
+useGLTF.preload(getAssetPath("/models/side-table.glb"));
 
 type DecorType = "vase" | "lamp" | "sculpture" | "table";
 
@@ -80,7 +81,7 @@ const DECOR_ITEMS: Record<DecorType, DecorMeta> = {
 
 function ModelItem({ type, isRotating = true }: { type: DecorType; isRotating?: boolean }) {
   const meta = DECOR_ITEMS[type];
-  const modelPath = `/models/${
+  const modelPath = getAssetPath(`/models/${
     type === "vase"
       ? "ceramic-vase.glb"
       : type === "lamp"
@@ -88,7 +89,7 @@ function ModelItem({ type, isRotating = true }: { type: DecorType; isRotating?: 
       : type === "sculpture"
       ? "sculptural-art.glb"
       : "side-table.glb"
-  }`;
+  }`);
 
   const { scene } = useGLTF(modelPath);
   const meshRef = useRef<THREE.Group>(null);

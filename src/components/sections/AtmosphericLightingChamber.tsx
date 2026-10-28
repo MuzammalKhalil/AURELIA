@@ -9,6 +9,7 @@ import { Sun, Sunset, Flame, Moon, Sparkles, Compass, Sliders, RotateCw } from "
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useInView } from "@/hooks/useInView";
+import { getAssetPath } from "@/lib/assets";
 
 interface AmbiancePreset {
   id: string;
@@ -128,9 +129,9 @@ export default function AtmosphericLightingChamber() {
   const lightZ = Math.sin(rad) * 6;
 
   const modelConfig = {
-    chair: { path: "/models/luxury-chair.glb", scale: 1.1 },
-    lamp: { path: "/models/brass-lamp.glb", scale: 0.45 },
-    sculpture: { path: "/models/sculptural-art.glb", scale: 0.8 },
+    chair: { path: getAssetPath("/models/luxury-chair.glb"), scale: 1.1 },
+    lamp: { path: getAssetPath("/models/brass-lamp.glb"), scale: 0.45 },
+    sculpture: { path: getAssetPath("/models/sculptural-art.glb"), scale: 0.8 },
   }[activeModel];
 
   return (
