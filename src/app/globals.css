@@ -59,6 +59,21 @@
   -webkit-text-fill-color: transparent;
 }
 
+@keyframes luxuryFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-luxury-fade {
+  animation: luxuryFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .gold-border {
   border-color: rgba(201, 166, 107, 0.2);
 }

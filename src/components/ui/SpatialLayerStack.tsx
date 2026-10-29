@@ -100,15 +100,15 @@ const LAYERS: LayerData[] = [
 ];
 
 export default function SpatialLayerStack() {
-  const [activeId, setActiveId] = useState<number>(1);
-  const [isFrontView, setIsFrontView] = useState<boolean>(true);
+  const [activeId, setActiveId] = useState<number>(4);
+  const [isFrontView, setIsFrontView] = useState<boolean>(false);
+  const [isStackHovered, setIsStackHovered] = useState<boolean>(false);
   const [mouseOffset, setMouseOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const pathRefs = useRef<(SVGRectElement | null)[]>([]);
   const datumPathRef = useRef<SVGPathElement | null>(null);
 
-  // Synchronous Scroll-driven SVG drawable path animation:
-  // animate(createDrawable('path'), { draw: ['0 0', '0 1', '1 1'], delay: stagger(40), ease: 'inOut(3)', autoplay: onScroll({ sync: true }) })
+  // Synchronous Scroll-driven SVG path animation & Z-axis layer separation
   useEffect(() => {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
@@ -130,13 +130,19 @@ export default function SpatialLayerStack() {
           datumPathRef.current.style.strokeDashoffset = `${dLen}`;
         }
 
-        // Create scroll-synchronized timeline matching onScroll({ sync: true })
+        // Create scroll-synchronized timeline for path draw and Z-separation spread
         const scrollTl = gsap.timeline({
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top 80%",
             end: "bottom 25%",
-            scrub: 1, // sync: true
+            scrub: 1,
+            onUpdate: (self) => {
+              if (containerRef.current) {
+                // Smoothly expand Z-separation along the scroll progression
+                containerRef.current.style.setProperty("--scroll-spread", `${self.progress * 16}px`);
+              }
+            },
           },
         });
 
@@ -145,8 +151,8 @@ export default function SpatialLayerStack() {
           .to(paths, {
             strokeDashoffset: 0,
             opacity: 1,
-            stagger: 0.1, // stagger(40)
-            ease: "power2.inOut", // inOut(3)
+            stagger: 0.1,
+            ease: "power2.inOut",
           }, 0)
           .to(datumPathRef.current, {
             strokeDashoffset: 0,
@@ -235,7 +241,11 @@ export default function SpatialLayerStack() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-20">
         
         {/* Left: 3D Isometric Exploded Layer Stack Viewport (Col 7) */}
-        <div className="lg:col-span-7 relative h-[400px] xs:h-[450px] sm:h-[500px] flex items-center justify-center perspective-[1200px] select-none pt-4">
+        <div
+          onMouseEnter={() => setIsStackHovered(true)}
+          onMouseLeave={() => setIsStackHovered(false)}
+          className="lg:col-span-7 relative h-[400px] xs:h-[450px] sm:h-[500px] flex items-center justify-center perspective-[1200px] select-none pt-4"
+        >
           
           {/* Scroll-driven Vertical Datum Ruler with Target Node */}
           <div className="absolute left-1 xs:left-2 sm:left-6 top-1/2 -translate-y-1/2 pointer-events-none z-30 flex flex-col items-center">
@@ -272,7 +282,7 @@ export default function SpatialLayerStack() {
             </span>
           </div>
 
-          {/* Main 3D Tilting Stage with Mouse Parallax */}
+          {/* Main 3D Tilting Stage with Mouse Parallax & Dynamic Z-Separation */}
           <div
             className="relative w-64 xs:w-72 sm:w-80 md:w-88 h-44 xs:h-48 sm:h-52 transition-transform duration-700 ease-out"
             style={{
@@ -280,25 +290,29 @@ export default function SpatialLayerStack() {
               transform: `rotateX(${50 + mouseOffset.y}deg) rotateZ(${-36 + mouseOffset.x}deg) rotateY(${mouseOffset.x * 0.4}deg)`,
             }}
           >
-            {/* Exploded Layers */}
+            {/* Isometric Layer Stack with hover/scroll Z-axis expansion */}
             {LAYERS.map((layer) => {
               const isSelected = activeId === layer.id;
               
-              // Base spacing in isometric stack (Tier 01 at bottom to Tier 05 at top)
-              const baseElevation = layer.id * 48;
+              // Base spacing in isometric stack: expands smoothly on stack hover or scroll
+              const baseSpacing = isStackHovered ? 56 : 46;
+              const baseElevation = layer.id * baseSpacing;
 
-              // Front-facing inspection dock matching user reference image exactly
+              // Front-facing inspection dock OR elevated isometric floating card
               const bringToFrontTransform = isSelected && isFrontView
                 ? `translateZ(275px) translateY(-15px) rotateZ(${36 - mouseOffset.x}deg) rotateX(${-50 - mouseOffset.y}deg) scale(1.15)`
-                : `translateZ(${isSelected ? baseElevation + 45 : baseElevation}px) scale(${isSelected ? 1.05 : 1})`;
+                : `translateZ(calc(${isSelected ? baseElevation + 44 : baseElevation}px + var(--scroll-spread, 0px))) scale(${isSelected ? 1.05 : 1})`;
 
               return (
                 <div
                   key={layer.id}
                   onClick={() => handleCardClick(layer.id)}
+                  onMouseEnter={() => {
+                    if (!isFrontView) setActiveId(layer.id);
+                  }}
                   className={`absolute inset-0 rounded-[20px] sm:rounded-[22px] backdrop-blur-2xl p-4 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
                     isSelected
-                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(201,166,107,0.35)]`
+                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(201,166,107,0.38)] ring-1 ring-champagne/40`
                       : isFrontView
                       ? "bg-[#0E0E0E]/90 border border-white/10 opacity-30 blur-[0.5px] hover:opacity-75 z-10"
                       : "bg-[#0E0E0E]/90 border border-white/10 opacity-70 hover:opacity-100 z-10"
@@ -384,65 +398,67 @@ export default function SpatialLayerStack() {
           </div>
         </div>
 
-        {/* Right: Curatorial Deep Dossier (Col 5) */}
+        {/* Right: Curatorial Deep Dossier (Col 5) with smooth fade-in transitions on selection or hover */}
         <div className="lg:col-span-5 flex flex-col space-y-6 lg:pl-4">
-          <div className="space-y-3">
-            <div className="inline-flex items-center space-x-2">
-              <span className="w-4 h-[1px]" style={{ backgroundColor: current.accentColor }} />
-              <span
-                className="text-[11px] uppercase font-mono tracking-[0.25em] font-medium"
-                style={{ color: current.accentColor }}
-              >
-                {current.category}
-              </span>
+          <div key={current.id} className="animate-luxury-fade space-y-6">
+            <div className="space-y-3">
+              <div className="inline-flex items-center space-x-2">
+                <span className="w-4 h-[1px]" style={{ backgroundColor: current.accentColor }} />
+                <span
+                  className="text-[11px] uppercase font-mono tracking-[0.25em] font-medium"
+                  style={{ color: current.accentColor }}
+                >
+                  {current.category}
+                </span>
+              </div>
+
+              <h4 className="font-serif text-3xl sm:text-4xl text-ivory font-light leading-tight transition-all duration-300">
+                {current.title}
+              </h4>
+
+              <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed font-light">
+                {current.description}
+              </p>
             </div>
 
-            <h4 className="font-serif text-3xl sm:text-4xl text-ivory font-light leading-tight transition-all duration-300">
-              {current.title}
-            </h4>
+            {/* Technical Ledger Box */}
+            <div className="bg-obsidian/90 border border-champagne/20 rounded-2xl p-6 space-y-3.5 text-xs font-mono shadow-xl backdrop-blur-xl">
+              <div className="flex justify-between py-1.5 border-b border-white/5">
+                <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
+                  Material Matrix
+                </span>
+                <span className="text-ivory font-sans text-right max-w-[60%]">
+                  {current.material}
+                </span>
+              </div>
 
-            <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed font-light">
-              {current.description}
-            </p>
-          </div>
+              <div className="flex justify-between py-1.5 border-b border-white/5">
+                <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
+                  Technical Spec
+                </span>
+                <span className="text-champagne font-sans text-right max-w-[60%]">
+                  {current.spec}
+                </span>
+              </div>
 
-          {/* Technical Ledger Box */}
-          <div className="bg-obsidian/90 border border-champagne/20 rounded-2xl p-6 space-y-3.5 text-xs font-mono shadow-xl backdrop-blur-xl">
-            <div className="flex justify-between py-1.5 border-b border-white/5">
-              <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
-                Material Matrix
-              </span>
-              <span className="text-ivory font-sans text-right max-w-[60%]">
-                {current.material}
-              </span>
-            </div>
+              <div className="flex justify-between py-1.5 border-b border-white/5">
+                <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
+                  Relative Elevation
+                </span>
+                <span className="text-ivory font-mono font-medium">
+                  {current.elevation}
+                </span>
+              </div>
 
-            <div className="flex justify-between py-1.5 border-b border-white/5">
-              <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
-                Technical Spec
-              </span>
-              <span className="text-champagne font-sans text-right max-w-[60%]">
-                {current.spec}
-              </span>
-            </div>
-
-            <div className="flex justify-between py-1.5 border-b border-white/5">
-              <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
-                Relative Elevation
-              </span>
-              <span className="text-ivory font-mono font-medium">
-                {current.elevation}
-              </span>
-            </div>
-
-            <div className="flex justify-between py-1 text-[11px]">
-              <span className="text-ivory-dark uppercase tracking-widest">
-                Handover Standard
-              </span>
-              <span className="text-champagne flex items-center space-x-1 font-sans">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Atelier Certified 1-of-1</span>
-              </span>
+              <div className="flex justify-between py-1 text-[11px]">
+                <span className="text-ivory-dark uppercase tracking-widest">
+                  Handover Standard
+                </span>
+                <span className="text-champagne flex items-center space-x-1 font-sans">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>Atelier Certified 1-of-1</span>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -453,10 +469,8 @@ export default function SpatialLayerStack() {
               return (
                 <button
                   key={l.id}
-                  onClick={() => {
-                    setActiveId(l.id);
-                    setIsFrontView(true);
-                  }}
+                  onClick={() => setActiveId(l.id)}
+                  onMouseEnter={() => setActiveId(l.id)}
                   className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full text-[11px] sm:text-xs font-mono font-bold flex items-center justify-center border transition-all duration-300 ${
                     isSelected
                       ? "bg-champagne text-obsidian border-champagne shadow-champagne scale-110 ring-2 ring-champagne/40"
