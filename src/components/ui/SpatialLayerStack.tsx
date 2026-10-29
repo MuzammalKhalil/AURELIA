@@ -100,8 +100,8 @@ const LAYERS: LayerData[] = [
 ];
 
 export default function SpatialLayerStack() {
-  const [activeId, setActiveId] = useState<number>(4);
-  const [isExploded, setIsExploded] = useState<boolean>(true);
+  const [activeId, setActiveId] = useState<number>(1);
+  const [isFrontView, setIsFrontView] = useState<boolean>(true);
   const [mouseOffset, setMouseOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const pathRefs = useRef<(SVGRectElement | null)[]>([]);
@@ -173,7 +173,12 @@ export default function SpatialLayerStack() {
   };
 
   const handleCardClick = (id: number) => {
-    setActiveId(id);
+    if (activeId === id) {
+      setIsFrontView(!isFrontView);
+    } else {
+      setActiveId(id);
+      setIsFrontView(true);
+    }
   };
 
   const current = LAYERS.find((l) => l.id === activeId) || LAYERS[0];
@@ -218,11 +223,11 @@ export default function SpatialLayerStack() {
         {/* Action Toggle Pill */}
         <div className="flex items-center space-x-3">
           <button
-            onClick={() => setIsExploded(!isExploded)}
+            onClick={() => setIsFrontView(!isFrontView)}
             className="flex items-center space-x-2 bg-obsidian/90 hover:bg-champagne hover:text-obsidian px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-champagne/30 text-[11px] sm:text-xs font-mono text-ivory transition-all duration-300 shadow-lg active:scale-95 group"
           >
-            <Layers className="w-3.5 h-3.5 text-champagne group-hover:text-obsidian transition-colors" />
-            <span>{isExploded ? "Exploded Stack" : "Compact Stack"}</span>
+            <Eye className="w-3.5 h-3.5 text-champagne group-hover:text-obsidian transition-colors" />
+            <span>{isFrontView ? "Click Card to Dock / Front" : "Inspect Front View"}</span>
           </button>
         </div>
       </div>
@@ -279,23 +284,27 @@ export default function SpatialLayerStack() {
             {LAYERS.map((layer) => {
               const isSelected = activeId === layer.id;
               
-              // Base elevation spacing between architectural layers (Exploded: 44px, Compact: 26px)
-              const layerSpacing = isExploded ? 44 : 26;
-              const baseElevation = layer.id * layerSpacing;
-              const elevation = isSelected ? baseElevation + 34 : baseElevation;
-              const layerTransform = `translateZ(${elevation}px) scale(${isSelected ? 1.04 : 1})`;
+              // Base spacing in isometric stack (Tier 01 at bottom to Tier 05 at top)
+              const baseElevation = layer.id * 48;
+
+              // Front-facing inspection dock matching user reference image exactly
+              const bringToFrontTransform = isSelected && isFrontView
+                ? `translateZ(275px) translateY(-15px) rotateZ(${36 - mouseOffset.x}deg) rotateX(${-50 - mouseOffset.y}deg) scale(1.15)`
+                : `translateZ(${isSelected ? baseElevation + 45 : baseElevation}px) scale(${isSelected ? 1.05 : 1})`;
 
               return (
                 <div
                   key={layer.id}
                   onClick={() => handleCardClick(layer.id)}
-                  className={`absolute inset-0 rounded-[20px] sm:rounded-[22px] backdrop-blur-2xl p-4 sm:p-6 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
+                  className={`absolute inset-0 rounded-[20px] sm:rounded-[22px] backdrop-blur-2xl p-4 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
                     isSelected
-                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_25px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(201,166,107,0.3)] ring-1 ring-champagne/40`
-                      : "bg-[#0E0E0E]/90 border border-white/10 opacity-75 hover:opacity-95 z-10"
+                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(201,166,107,0.35)]`
+                      : isFrontView
+                      ? "bg-[#0E0E0E]/90 border border-white/10 opacity-30 blur-[0.5px] hover:opacity-75 z-10"
+                      : "bg-[#0E0E0E]/90 border border-white/10 opacity-70 hover:opacity-100 z-10"
                   }`}
                   style={{
-                    transform: layerTransform,
+                    transform: bringToFrontTransform,
                     transformStyle: "preserve-3d",
                   }}
                 >
@@ -334,10 +343,9 @@ export default function SpatialLayerStack() {
                       >
                         {layer.tierNumber}
                       </span>
-                      {isSelected && (
-                        <span className="text-[9px] sm:text-[10px] text-champagne font-mono font-medium flex items-center space-x-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-champagne animate-pulse" />
-                          <span>Active Layer</span>
+                      {isSelected && isFrontView && (
+                        <span className="text-[9px] sm:text-[10px] text-champagne font-mono font-medium flex items-center space-x-1 animate-pulse">
+                          <span>• Front Inspection</span>
                         </span>
                       )}
                     </div>
@@ -445,7 +453,10 @@ export default function SpatialLayerStack() {
               return (
                 <button
                   key={l.id}
-                  onClick={() => setActiveId(l.id)}
+                  onClick={() => {
+                    setActiveId(l.id);
+                    setIsFrontView(true);
+                  }}
                   className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full text-[11px] sm:text-xs font-mono font-bold flex items-center justify-center border transition-all duration-300 ${
                     isSelected
                       ? "bg-champagne text-obsidian border-champagne shadow-champagne scale-110 ring-2 ring-champagne/40"
