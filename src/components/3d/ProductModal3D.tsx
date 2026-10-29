@@ -134,14 +134,14 @@ export default function ProductModal3D({ product, onClose }: ProductModalProps) 
             {lightMood === "day" && (
               <>
                 <ambientLight intensity={1.2} />
-                <directionalLight position={[4, 6, 4]} intensity={2.2} castShadow />
+                <directionalLight position={[4, 6, 4]} intensity={2.2} />
                 <directionalLight position={[-4, 2, -2]} intensity={0.6} color="#BEE3F8" />
               </>
             )}
             {lightMood === "sunset" && (
               <>
                 <ambientLight intensity={0.8} color="#FFD1A4" />
-                <directionalLight position={[5, 3, 2]} intensity={3.0} color="#FF9A3C" castShadow />
+                <directionalLight position={[5, 3, 2]} intensity={3.0} color="#FF9A3C" />
                 <pointLight position={[-3, 1, 2]} intensity={1.2} color="#D4A373" />
               </>
             )}

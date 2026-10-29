@@ -51,7 +51,7 @@ const STORY_STOPS = [
 ];
 
 // Interior 3D Room Architecture Component with memoized primitives
-function InteriorRoom() {
+const InteriorRoom = React.memo(function InteriorRoom() {
   const chairGltf = useGLTF(getAssetPath("/models/luxury-chair.glb"));
   const lampGltf = useGLTF(getAssetPath("/models/brass-lamp.glb"));
   const tableGltf = useGLTF(getAssetPath("/models/side-table.glb"));
@@ -143,15 +143,15 @@ function InteriorRoom() {
       />
     </group>
   );
-}
+});
 
 // Camera Director Component that animates camera transforms based on active progress
 function CameraDirector({
-  currentProgress,
-  targetStop,
+  progressRef,
+  manualStopRef,
 }: {
-  currentProgress: number;
-  targetStop: number | null;
+  progressRef: React.MutableRefObject<number>;
+  manualStopRef: React.MutableRefObject<number | null>;
 }) {
   const curPos = useRef(new THREE.Vector3(0, 2.2, 5.2));
   const curLookAt = useRef(new THREE.Vector3(0, 0.2, 0));
@@ -160,12 +160,12 @@ function CameraDirector({
     let desiredPos: THREE.Vector3;
     let desiredLook: THREE.Vector3;
 
-    if (targetStop !== null) {
-      const stop = STORY_STOPS[targetStop];
+    if (manualStopRef.current !== null) {
+      const stop = STORY_STOPS[manualStopRef.current];
       desiredPos = new THREE.Vector3(...stop.camPos);
       desiredLook = new THREE.Vector3(...stop.camTarget);
     } else {
-      const clampedProg = Math.max(0, Math.min(0.999, currentProgress));
+      const clampedProg = Math.max(0, Math.min(0.999, progressRef.current));
       const totalStops = STORY_STOPS.length;
       const indexFloat = clampedProg * (totalStops - 1);
       const idxA = Math.floor(indexFloat);
@@ -196,14 +196,23 @@ function CameraDirector({
 
 export default function InteriorShowcaseScene() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { isInView } = useInView<HTMLDivElement>(0.05);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isInView, setIsInView] = useState(true);
+  const progressRef = useRef(0);
+  const manualStopRef = useRef<number | null>(null);
+  const activeStopRef = useRef(0);
   const [activeStopIndex, setActiveStopIndex] = useState(0);
-  const [manualStop, setManualStop] = useState<number | null>(null);
   const [roomMood, setRoomMood] = useState<"day" | "golden" | "night">("day");
 
   useEffect(() => {
     if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { rootMargin: "250px" }
+    );
+    observer.observe(containerRef.current);
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -211,25 +220,30 @@ export default function InteriorShowcaseScene() {
         start: "top top",
         end: "+=1200",
         pin: true,
-        scrub: 0.5,
+        scrub: 0.3,
         onUpdate: (self) => {
-          setManualStop(null);
-          const p = self.progress;
-          setScrollProgress(p);
+          manualStopRef.current = null;
+          progressRef.current = self.progress;
           const stopIdx = Math.min(
             STORY_STOPS.length - 1,
-            Math.floor(p * STORY_STOPS.length)
+            Math.floor(self.progress * STORY_STOPS.length)
           );
-          setActiveStopIndex(stopIdx);
+          if (stopIdx !== activeStopRef.current) {
+            activeStopRef.current = stopIdx;
+            setActiveStopIndex(stopIdx);
+          }
         },
       });
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      observer.disconnect();
+      ctx.revert();
+    };
   }, []);
 
   const currentStop =
-    manualStop !== null ? STORY_STOPS[manualStop] : STORY_STOPS[activeStopIndex];
+    manualStopRef.current !== null ? STORY_STOPS[manualStopRef.current] : STORY_STOPS[activeStopIndex];
 
   return (
     <div
@@ -280,7 +294,8 @@ export default function InteriorShowcaseScene() {
             <button
               key={stop.id}
               onClick={() => {
-                setManualStop(i);
+                manualStopRef.current = i;
+                activeStopRef.current = i;
                 setActiveStopIndex(i);
               }}
               className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-mono transition-all duration-300 ${
@@ -328,8 +343,8 @@ export default function InteriorShowcaseScene() {
           <Suspense fallback={null}>
             <InteriorRoom />
             <CameraDirector
-              currentProgress={scrollProgress}
-              targetStop={manualStop}
+              progressRef={progressRef}
+              manualStopRef={manualStopRef}
             />
           </Suspense>
         </Canvas>

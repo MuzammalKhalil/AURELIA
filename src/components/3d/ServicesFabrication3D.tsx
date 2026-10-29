@@ -131,44 +131,44 @@ export default function ServicesFabrication3D() {
 
       {/* Real-time 3D Canvas */}
       <div className="absolute inset-0 flex items-center justify-center">
-        {isInView && (
-          <Canvas
-            dpr={1}
-            camera={{ position: [0, 1.3, 3.4], fov: 42 }}
-            className="cursor-grab active:cursor-grabbing w-full h-full"
-          >
-            <ambientLight intensity={1.1} color="#FFF8EE" />
-            <directionalLight position={[4, 5, 3]} intensity={2.4} color="#FFEDD5" castShadow />
-            <directionalLight position={[-4, 2, -2]} intensity={0.7} color="#93C5FD" />
-            <pointLight position={[0, -0.5, 2]} intensity={0.8} color="#C9A66B" />
+        <Canvas
+          dpr={1}
+          frameloop={isInView ? "always" : "never"}
+          gl={{ antialias: true, alpha: true, precision: "mediump" }}
+          camera={{ position: [0, 1.3, 3.4], fov: 42 }}
+          className="cursor-grab active:cursor-grabbing w-full h-full"
+        >
+          <ambientLight intensity={1.1} color="#FFF8EE" />
+          <directionalLight position={[4, 5, 3]} intensity={2.4} color="#FFEDD5" />
+          <directionalLight position={[-4, 2, -2]} intensity={0.7} color="#93C5FD" />
+          <pointLight position={[0, -0.5, 2]} intensity={0.8} color="#C9A66B" />
 
-            <Suspense fallback={null}>
-              <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
-                <WorkbenchObject
-                  modelPath={current.path}
-                  scale={current.scale}
-                  wireframe={wireframe}
-                />
-              </Float>
-              <ContactShadows
-                position={[0, -0.7, 0]}
-                opacity={0.65}
-                scale={6}
-                blur={2.4}
-                far={4}
-                frames={1}
+          <Suspense fallback={null}>
+            <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
+              <WorkbenchObject
+                modelPath={current.path}
+                scale={current.scale}
+                wireframe={wireframe}
               />
-            </Suspense>
-
-            <OrbitControls
-              enablePan={false}
-              minDistance={1.8}
-              maxDistance={5.0}
-              minPolarAngle={Math.PI / 6}
-              maxPolarAngle={Math.PI / 2 + 0.05}
+            </Float>
+            <ContactShadows
+              position={[0, -0.7, 0]}
+              opacity={0.65}
+              scale={6}
+              blur={2.4}
+              far={4}
+              frames={1}
             />
-          </Canvas>
-        )}
+          </Suspense>
+
+          <OrbitControls
+            enablePan={false}
+            minDistance={1.8}
+            maxDistance={5.0}
+            minPolarAngle={Math.PI / 6}
+            maxPolarAngle={Math.PI / 2 + 0.05}
+          />
+        </Canvas>
       </div>
 
       {/* Bottom Architectural Specification Bar */}

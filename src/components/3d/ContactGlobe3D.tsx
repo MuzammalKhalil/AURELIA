@@ -76,21 +76,21 @@ export default function ContactGlobe3D() {
         <span>Atelier Global Horizon • 3D Gyroscope</span>
       </div>
 
-      {isInView && (
-        <Canvas
-          dpr={1}
-          camera={{ position: [0, 0, 3.8], fov: 45 }}
-          className="w-full h-full"
-        >
-          <ambientLight intensity={0.8} />
-          <directionalLight position={[3, 3, 3]} intensity={1.5} color="#FFE6C7" />
-          <directionalLight position={[-3, -2, -2]} intensity={0.5} color="#93C5FD" />
+      <Canvas
+        dpr={1}
+        frameloop={isInView ? "always" : "never"}
+        gl={{ antialias: true, alpha: true, precision: "mediump" }}
+        camera={{ position: [0, 0, 3.8], fov: 45 }}
+        className="w-full h-full"
+      >
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[3, 3, 3]} intensity={1.5} color="#FFE6C7" />
+        <directionalLight position={[-3, -2, -2]} intensity={0.5} color="#93C5FD" />
 
-          <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.2}>
-            <GyroscopeRings />
-          </Float>
-        </Canvas>
-      )}
+        <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.2}>
+          <GyroscopeRings />
+        </Float>
+      </Canvas>
 
       <div className="absolute bottom-3 right-4 z-10 text-[9px] font-mono text-ivory-dark">
         Zurich • Milan • New York

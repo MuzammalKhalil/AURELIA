@@ -307,61 +307,60 @@ export default function AtmosphericLightingChamber() {
             </div>
 
             {/* Canvas */}
-            {isInView && (
-              <Canvas
-                dpr={1}
-                camera={{ position: [0, 1.4, 3.4], fov: 45 }}
-                className="cursor-grab active:cursor-grabbing w-full h-full"
-              >
-                {/* Dynamic Lighting System */}
-                <ambientLight
-                  color={preset.ambientColor}
-                  intensity={preset.ambientIntensity}
-                />
-                
-                {/* Directional Sun / Light source positioned via slider angle */}
-                <directionalLight
-                  position={[lightX, 4, lightZ]}
-                  intensity={preset.dirIntensity}
-                  color={preset.dirColor}
-                  castShadow
-                />
+            <Canvas
+              dpr={1}
+              frameloop={isInView ? "always" : "never"}
+              gl={{ antialias: true, alpha: true, precision: "mediump" }}
+              camera={{ position: [0, 1.4, 3.4], fov: 45 }}
+              className="cursor-grab active:cursor-grabbing w-full h-full"
+            >
+              {/* Dynamic Lighting System */}
+              <ambientLight
+                color={preset.ambientColor}
+                intensity={preset.ambientIntensity}
+              />
+              
+              {/* Directional Sun / Light source positioned via slider angle */}
+              <directionalLight
+                position={[lightX, 4, lightZ]}
+                intensity={preset.dirIntensity}
+                color={preset.dirColor}
+              />
 
-                {/* Secondary Fill Light */}
-                <pointLight
-                  position={[-lightX * 0.5, 1, -lightZ * 0.5]}
-                  intensity={0.6}
-                  color={preset.secondaryColor}
-                />
+              {/* Secondary Fill Light */}
+              <pointLight
+                position={[-lightX * 0.5, 1, -lightZ * 0.5]}
+                intensity={0.6}
+                color={preset.secondaryColor}
+              />
 
-                <Suspense fallback={null}>
-                  <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
-                    <ChamberModel
-                      modelPath={modelConfig.path}
-                      scale={modelConfig.scale}
-                      rotationSpeed={autoRotate ? 0.25 : 0}
-                    />
-                  </Float>
-
-                  <ContactShadows
-                    position={[0, -0.65, 0]}
-                    opacity={0.65}
-                    scale={5.5}
-                    blur={2.2}
-                    far={4}
-                    frames={1}
+              <Suspense fallback={null}>
+                <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
+                  <ChamberModel
+                    modelPath={modelConfig.path}
+                    scale={modelConfig.scale}
+                    rotationSpeed={autoRotate ? 0.25 : 0}
                   />
-                </Suspense>
+                </Float>
 
-                <OrbitControls
-                  enablePan={false}
-                  minDistance={2.0}
-                  maxDistance={5.0}
-                  minPolarAngle={Math.PI / 6}
-                  maxPolarAngle={Math.PI / 2 + 0.05}
+                <ContactShadows
+                  position={[0, -0.65, 0]}
+                  opacity={0.65}
+                  scale={5.5}
+                  blur={2.2}
+                  far={4}
+                  frames={1}
                 />
-              </Canvas>
-            )}
+              </Suspense>
+
+              <OrbitControls
+                enablePan={false}
+                minDistance={2.0}
+                maxDistance={5.0}
+                minPolarAngle={Math.PI / 6}
+                maxPolarAngle={Math.PI / 2 + 0.05}
+              />
+            </Canvas>
 
             {/* Bottom Interaction Hint */}
             <div className="absolute bottom-4 right-5 z-20 pointer-events-none text-[10px] font-mono text-ivory-dark bg-obsidian/70 px-3 py-1 rounded-full border border-white/10">

@@ -54,40 +54,40 @@ export default function AboutAtelierScene3D() {
       </div>
 
       {/* Canvas */}
-      {isInView && (
-        <Canvas
-          dpr={1}
-          camera={{ position: [0, 1.2, 3.4], fov: 42 }}
-          className="cursor-grab active:cursor-grabbing w-full h-full"
-        >
-          <ambientLight intensity={0.9} color="#FFF8EE" />
-          <directionalLight position={[4, 5, 3]} intensity={2.6} color="#FFEDD5" castShadow />
-          <directionalLight position={[-4, 2, -2]} intensity={0.8} color="#93C5FD" />
-          <pointLight position={[0, -1, 2]} intensity={1.0} color="#C9A66B" />
+      <Canvas
+        dpr={1}
+        frameloop={isInView ? "always" : "never"}
+        gl={{ antialias: true, alpha: true, precision: "mediump" }}
+        camera={{ position: [0, 1.2, 3.4], fov: 42 }}
+        className="cursor-grab active:cursor-grabbing w-full h-full"
+      >
+        <ambientLight intensity={0.9} color="#FFF8EE" />
+        <directionalLight position={[4, 5, 3]} intensity={2.6} color="#FFEDD5" />
+        <directionalLight position={[-4, 2, -2]} intensity={0.8} color="#93C5FD" />
+        <pointLight position={[0, -1, 2]} intensity={1.0} color="#C9A66B" />
 
-          <Suspense fallback={null}>
-            <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
-              <PedestalArt />
-            </Float>
-            <ContactShadows
-              position={[0, -0.9, 0]}
-              opacity={0.65}
-              scale={6}
-              blur={2.4}
-              far={4}
-              frames={1}
-            />
-          </Suspense>
-
-          <OrbitControls
-            enablePan={false}
-            minDistance={2.0}
-            maxDistance={5.0}
-            minPolarAngle={Math.PI / 6}
-            maxPolarAngle={Math.PI / 2 + 0.05}
+        <Suspense fallback={null}>
+          <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
+            <PedestalArt />
+          </Float>
+          <ContactShadows
+            position={[0, -0.9, 0]}
+            opacity={0.65}
+            scale={6}
+            blur={2.4}
+            far={4}
+            frames={1}
           />
-        </Canvas>
-      )}
+        </Suspense>
+
+        <OrbitControls
+          enablePan={false}
+          minDistance={2.0}
+          maxDistance={5.0}
+          minPolarAngle={Math.PI / 6}
+          maxPolarAngle={Math.PI / 2 + 0.05}
+        />
+      </Canvas>
 
       {/* Bottom Technical Spec */}
       <div className="absolute bottom-5 left-5 right-5 z-20 flex items-center justify-between text-[11px] font-mono text-ivory-dark bg-obsidian/80 backdrop-blur-md p-3 rounded-2xl border border-white/10">

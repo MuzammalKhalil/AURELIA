@@ -1,16 +1,15 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-function ParticleCloud({ count = 120 }: { count?: number }) {
+function ParticleCloud({ count = 65 }: { count?: number }) {
   const meshRef = useRef<THREE.Points>(null);
 
-  const [positions, colors, scales] = useMemo(() => {
+  const [positions, colors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
-    const scl = new Float32Array(count);
 
     const champagne = new THREE.Color("#C9A66B");
     const ivory = new THREE.Color("#F4F0E8");
@@ -28,11 +27,9 @@ function ParticleCloud({ count = 120 }: { count?: number }) {
       col[i * 3] = chosenColor.r;
       col[i * 3 + 1] = chosenColor.g;
       col[i * 3 + 2] = chosenColor.b;
-
-      scl[i] = Math.random() * 2.5 + 1.0;
     }
 
-    return [pos, col, scl];
+    return [pos, col];
   }, [count]);
 
   useFrame((state, delta) => {
@@ -40,12 +37,6 @@ function ParticleCloud({ count = 120 }: { count?: number }) {
     // Gentle 3D orbital drift
     meshRef.current.rotation.y += delta * 0.035;
     meshRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.2) * 0.05;
-
-    // Subtle pointer parallax
-    const targetX = (state.pointer.x * Math.PI) / 16;
-    const targetY = (state.pointer.y * Math.PI) / 20;
-    meshRef.current.rotation.y += (targetX - meshRef.current.rotation.y) * 0.02;
-    meshRef.current.rotation.x += (targetY - meshRef.current.rotation.x) * 0.02;
   });
 
   return (
@@ -61,10 +52,10 @@ function ParticleCloud({ count = 120 }: { count?: number }) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.06}
+        size={0.065}
         vertexColors
         transparent
-        opacity={0.65}
+        opacity={0.6}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
       />
@@ -73,15 +64,35 @@ function ParticleCloud({ count = 120 }: { count?: number }) {
 }
 
 export default function FloatingParticles3D() {
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-60">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-50">
       <Canvas
         camera={{ position: [0, 0, 8], fov: 60 }}
         dpr={1}
-        gl={{ alpha: true, antialias: false, powerPreference: "low-power" }}
+        frameloop={isScrolling ? "never" : "always"}
+        gl={{ alpha: true, antialias: false, powerPreference: "low-power", depth: false, stencil: false }}
         className="w-full h-full"
       >
-        <ParticleCloud count={140} />
+        <ParticleCloud count={65} />
       </Canvas>
     </div>
   );

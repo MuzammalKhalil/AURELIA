@@ -109,6 +109,8 @@ const MATERIALS: MaterialItem[] = [
   },
 ];
 
+const SHEEN_COLOR = new THREE.Color("#FAF6EF");
+
 function MaterialSphere({ material }: { material: MaterialItem }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -120,7 +122,7 @@ function MaterialSphere({ material }: { material: MaterialItem }) {
 
   return (
     <group position={[0, 0, 0]}>
-      <mesh ref={meshRef} castShadow receiveShadow>
+      <mesh ref={meshRef}>
         <sphereGeometry args={[1.15, 48, 48]} />
         <meshPhysicalMaterial
           color={material.color}
@@ -129,7 +131,7 @@ function MaterialSphere({ material }: { material: MaterialItem }) {
           clearcoat={material.clearcoat ?? 0}
           clearcoatRoughness={material.clearcoatRoughness ?? 0}
           sheen={material.sheen ?? 0}
-          sheenColor={new THREE.Color("#FAF6EF")}
+          sheenColor={SHEEN_COLOR}
         />
       </mesh>
 

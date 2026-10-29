@@ -20,10 +20,15 @@ export default function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
+    let prev = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      const isPast = window.scrollY > 40;
+      if (isPast !== prev) {
+        prev = isPast;
+        setScrolled(isPast);
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
