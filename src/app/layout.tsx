@@ -4,7 +4,6 @@ import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import CustomCursor from "@/components/ui/CustomCursor";
 import Preloader from "@/components/ui/Preloader";
-import PageTransition from "@/components/ui/PageTransition";
 import FloatingParticles3D from "@/components/3d/FloatingParticles3D";
 
 export const metadata: Metadata = {
@@ -36,7 +35,6 @@ export default function RootLayout({
       </head>
       <body className="bg-obsidian text-ivory antialiased selection:bg-champagne selection:text-obsidian min-h-screen flex flex-col relative overflow-x-hidden">
         <Preloader />
-        <PageTransition />
         <CustomCursor />
         <FloatingParticles3D />
         <div className="fixed inset-0 pointer-events-none bg-noise opacity-40 z-[99]" />

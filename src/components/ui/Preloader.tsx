@@ -1,11 +1,23 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Sparkles } from "lucide-react";
 import { useProgress } from "@react-three/drei";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
 
-const phrases = [
+const ROUTE_DESCRIPTIONS: Record<string, string> = {
+  "/": "INITIALIZING 3D SPATIAL ENGINE • WELCOME TO AURELIA",
+  "/spaces": "CALIBRATING LIVING ENVIRONMENTS • SIGNATURE SPACES",
+  "/services": "PREPARING BESPOKE FABRICATION • ATELIER SERVICES",
+  "/projects": "CURATING ARCHITECTURAL MONOGRAPHS • PORTFOLIO",
+  "/about": "PROVENANCE & CRAFTSMANSHIP • THE ATELIER",
+  "/contact": "ESTABLISHING PRIVATE COMMISSION DATUM • INQUIRIES",
+  "/privacy": "CONFIDENTIALITY & CLIENT PROTOCOL",
+  "/holo-card": "HOLOGRAPHIC SHADER CALIBRATION LAB",
+};
+
+const PHRASES = [
   "INITIALIZING 3D SPATIAL ENGINE",
   "CALIBRATING LIGHT & MATERIALS",
   "SYNCHRONIZING ARCHITECTURAL DATUM",
@@ -16,21 +28,25 @@ const TICK_COUNT = 36;
 const TICKS = Array.from({ length: TICK_COUNT }, (_, i) => i);
 
 export default function Preloader() {
+  const pathname = usePathname();
   const { active, progress: threeProgress } = useProgress();
-  const [displayProgress, setDisplayProgress] = useState(0);
-  const [phraseIndex, setPhraseIndex] = useState(0);
+
   const [loading, setLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
+  const [displayProgress, setDisplayProgress] = useState(0);
+  const [phraseIndex, setPhraseIndex] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const tickerRef = useRef<HTMLDivElement>(null);
   const ticksRef = useRef<(HTMLDivElement | null)[]>([]);
-  const minTimerDone = useRef(false);
-  const isDoneRef = useRef(false);
 
-  useEffect(() => {
+  const isTransitioningRef = useRef(false);
+  const prevPathname = useRef(pathname);
+  const isInitialMount = useRef(true);
+
+  // Play Dial and Needle Timeline Choreography
+  const playDialChoreography = useCallback((durationSec: number) => {
     const validTicks = ticksRef.current.filter(Boolean);
-
     const tl = gsap.timeline();
 
     if (validTicks.length > 0 && tickerRef.current) {
@@ -39,37 +55,48 @@ export default function Preloader() {
         duration: 0.05,
         stagger: 0.01,
         yoyo: true,
-        repeat: 3,
+        repeat: Math.max(1, Math.round(durationSec / 0.45)),
         ease: "power1.inOut",
       })
-      .to(tickerRef.current, {
-        rotate: 360,
-        duration: 1.8,
-        ease: "power2.inOut",
-      }, "<");
+      .to(
+        tickerRef.current,
+        {
+          rotate: "+=360",
+          duration: durationSec,
+          ease: "power2.inOut",
+        },
+        "<"
+      );
     }
+    return tl;
+  }, []);
 
-    // Smooth RAF progress interpolator
+  // Main Loading Runner
+  const runLoadingSequence = useCallback((isInitial: boolean) => {
+    setLoading(true);
+    setFadeOut(false);
+    setDisplayProgress(0);
+    setPhraseIndex(0);
+    isTransitioningRef.current = true;
+
+    const minDuration = isInitial ? 1800 : 950; // 1.8s for initial load, 0.95s for inner page load
     const startTime = performance.now();
-    const MIN_DURATION = 1800; // Minimum 1.8s for dial choreography
-    let currentVal = 0;
+    const durationSec = minDuration / 1000;
+
+    const tl = playDialChoreography(durationSec);
     let rafId: number;
+    let currentVal = 0;
 
     const tick = () => {
       const elapsed = performance.now() - startTime;
-      const timePercent = Math.min(100, (elapsed / MIN_DURATION) * 100);
+      const timePercent = Math.min(100, (elapsed / minDuration) * 100);
 
-      if (elapsed >= MIN_DURATION) {
-        minTimerDone.current = true;
-      }
-
-      // Target progress is governed by real 3D assets + time baseline
-      const targetPercent = active
+      // In initial load, wait for 3D progress; in inner route navigation, interpolate timePercent
+      const targetPercent = isInitial && active
         ? Math.max(timePercent * 0.7, threeProgress)
-        : Math.max(timePercent, 100);
+        : timePercent;
 
-      // Smooth buttery lerp
-      currentVal += (targetPercent - currentVal) * 0.08;
+      currentVal += (targetPercent - currentVal) * 0.12;
       const rounded = Math.min(100, Math.floor(currentVal));
       setDisplayProgress(rounded);
 
@@ -77,14 +104,13 @@ export default function Preloader() {
       else if (rounded > 50) setPhraseIndex(2);
       else if (rounded > 25) setPhraseIndex(1);
 
-      // Complete when dial choreography finishes and 3D assets are ready
-      if (minTimerDone.current && rounded >= 99 && !isDoneRef.current) {
-        isDoneRef.current = true;
+      if (elapsed >= minDuration && rounded >= 99) {
         setDisplayProgress(100);
         setFadeOut(true);
         setTimeout(() => {
           setLoading(false);
-        }, 650);
+          isTransitioningRef.current = false;
+        }, 550);
         return;
       }
 
@@ -93,32 +119,80 @@ export default function Preloader() {
 
     rafId = requestAnimationFrame(tick);
 
-    // Fallback safety timeout so user is never stuck
-    const safetyTimer = setTimeout(() => {
-      if (!isDoneRef.current) {
-        isDoneRef.current = true;
-        setDisplayProgress(100);
-        setFadeOut(true);
-        setTimeout(() => setLoading(false), 500);
-      }
-    }, 4500);
-
     return () => {
       cancelAnimationFrame(rafId);
-      clearTimeout(safetyTimer);
       tl.kill();
     };
-  }, [active, threeProgress]);
+  }, [active, threeProgress, playDialChoreography]);
+
+  // 1. Initial Load & Refresh Handler
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      const cleanup = runLoadingSequence(true);
+      return cleanup;
+    }
+  }, [runLoadingSequence]);
+
+  // 2. Trigger on Every Route / Inner Page Change
+  useEffect(() => {
+    if (prevPathname.current !== pathname) {
+      prevPathname.current = pathname;
+      window.scrollTo(0, 0);
+      const cleanup = runLoadingSequence(false);
+      return cleanup;
+    }
+  }, [pathname, runLoadingSequence]);
+
+  // 3. Intercept Internal Link Clicks for Instant Preloader Trigger
+  useEffect(() => {
+    const handleDocumentClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      const anchor = target.closest("a");
+      if (!anchor) return;
+
+      const href = anchor.getAttribute("href");
+      if (!href) return;
+
+      const isInternal =
+        href.startsWith("/") &&
+        !href.startsWith("//") &&
+        !href.startsWith("/#") &&
+        !href.startsWith("mailto:") &&
+        !href.startsWith("tel:") &&
+        anchor.target !== "_blank";
+
+      if (isInternal) {
+        const cleanHref = href.split("#")[0].replace(/\/$/, "") || "/";
+        const currentClean = window.location.pathname.replace(/\/$/, "") || "/";
+
+        if (cleanHref !== currentClean && !isTransitioningRef.current) {
+          // Immediately show preloader on click
+          setLoading(true);
+          setFadeOut(false);
+        }
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick, { capture: true });
+    return () => {
+      document.removeEventListener("click", handleDocumentClick, { capture: true });
+    };
+  }, []);
 
   if (!loading) return null;
+
+  const currentDesc = ROUTE_DESCRIPTIONS[pathname] || PHRASES[phraseIndex];
 
   return (
     <div
       ref={containerRef}
       onClick={() => {
-        isDoneRef.current = true;
+        setDisplayProgress(100);
         setFadeOut(true);
-        setTimeout(() => setLoading(false), 400);
+        setTimeout(() => setLoading(false), 350);
       }}
       className={`fixed inset-0 z-[99999] bg-obsidian flex flex-col justify-between p-8 md:p-14 select-none cursor-pointer transition-all duration-700 ease-out ${
         fadeOut ? "opacity-0 pointer-events-none scale-[1.02] blur-sm" : "opacity-100 scale-100 blur-0"
@@ -130,7 +204,7 @@ export default function Preloader() {
       {/* Top Bar */}
       <div className="flex items-center justify-between text-xs font-mono relative z-10">
         <div className="flex items-center space-x-2 text-champagne">
-          <Sparkles className="w-3.5 h-3.5" />
+          <Sparkles className="w-3.5 h-3.5 animate-spin-slow" />
           <span className="uppercase tracking-[0.25em]">Atelier 3D Experience</span>
         </div>
         <div className="text-ivory-dark tracking-widest font-mono text-[11px]">
@@ -204,10 +278,10 @@ export default function Preloader() {
           </p>
         </div>
 
-        {/* Phase subtitle */}
+        {/* Phase / Route subtitle */}
         <div className="h-5 flex items-center justify-center">
           <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-ivory-dark transition-all duration-300">
-            {phrases[phraseIndex]}
+            {currentDesc}
           </span>
         </div>
       </div>
