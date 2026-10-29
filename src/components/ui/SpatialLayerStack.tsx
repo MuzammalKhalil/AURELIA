@@ -1,71 +1,32 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Sparkles, CheckCircle2, Eye, Compass, MoveUpRight, Layers } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import { Sparkles, CheckCircle2, Layers, Compass, RotateCw } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
+import type { LayerData } from "@/components/3d/SpatialAnatomyCanvas";
 
-interface LayerData {
-  id: number;
-  tierNumber: string;
-  title: string;
-  tagline: string;
-  category: string;
-  material: string;
-  spec: string;
-  elevation: string;
-  elevationVal: number;
-  accentColor: string;
-  bgGradient: string;
-  borderColor: string;
-  description: string;
-}
+// Lazy-load Three.js 3D Canvas for instant page load & optimal performance
+const SpatialAnatomyCanvas = dynamic(
+  () => import("@/components/3d/SpatialAnatomyCanvas"),
+  { ssr: false }
+);
 
 const LAYERS: LayerData[] = [
   {
-    id: 4,
-    tierNumber: "05",
-    title: "Curatorial Art & Sculptures",
-    tagline: "Sculptural Focal Apex",
-    category: "Tier 05 • Objets d'Art",
-    material: "Lost-wax cast champagne bronze & feldspar stoneware",
-    spec: "Cast bronze edition 3 of 8 • Natural chalk satin glaze",
-    elevation: "+260 MM",
-    elevationVal: 260,
-    accentColor: "#C9A66B",
-    bgGradient: "from-champagne/20 via-charcoal/95 to-obsidian",
-    borderColor: "border-champagne",
-    description: "Numbered bronze sculptures and organic stoneware vessels that catch raking daylight and anchor the room's emotional soul.",
-  },
-  {
-    id: 3,
-    tierNumber: "04",
-    title: "Circadian Luminaire Network",
-    tagline: "Atmospheric Luminaire Network",
-    category: "Tier 04 • Architectural Lighting",
-    material: "Hand-patinated antique brass & 2700K warm LED reveals",
-    spec: "CRI 98 color fidelity • Diurnal circadian synchronization",
-    elevation: "+195 MM",
-    elevationVal: 195,
-    accentColor: "#E2C18D",
-    bgGradient: "from-champagne-300/15 via-charcoal/95 to-obsidian",
-    borderColor: "border-champagne/60",
-    description: "Low-glare directional shadow casting calibrated to diurnal daylight progression for deep psychological calm.",
-  },
-  {
-    id: 2,
-    tierNumber: "03",
-    title: "Tactile Acoustic Envelopes",
-    tagline: "Sensory Ergonomics",
-    category: "Tier 03 • Haute Upholstery",
-    material: "Alpine shearling wool & unbleached Belgian linen",
-    spec: "Biella Piedmont weave • 100,000 Martindale durability rating",
-    elevation: "+130 MM",
-    elevationVal: 130,
-    accentColor: "#D8C7B0",
-    bgGradient: "from-stone-300/15 via-charcoal/95 to-obsidian",
-    borderColor: "border-ivory/50",
-    description: "Cloud-soft textured looped bouclé that cushions the body while creating rich acoustic dampening throughout the salon.",
+    id: 0,
+    tierNumber: "01",
+    title: "Subterranean Foundation Substrate",
+    tagline: "Foundation Substrate",
+    category: "Tier 01 • Architectural Mass",
+    material: "Roman vein-cut Tivoli travertine & obsidian slate",
+    spec: "Honed cross-cut extraction • 40mm solid slab perimeter",
+    elevation: "0.0 MM",
+    elevationVal: 0,
+    accentColor: "#9E907B",
+    bgGradient: "from-stone-800/30 via-charcoal/95 to-obsidian",
+    borderColor: "border-white/20",
+    description: "Massive thermal stone slabs providing organic gravitas, thermal regulation, and structural grounding.",
   },
   {
     id: 1,
@@ -83,336 +44,146 @@ const LAYERS: LayerData[] = [
     description: "Slatted acoustic wood paneling attenuating sound reverberations down to 0.45 seconds for whisper-quiet intimacy.",
   },
   {
-    id: 0,
-    tierNumber: "01",
-    title: "Subterranean Foundation Substrate",
-    tagline: "Foundation Substrate",
-    category: "Tier 01 • Architectural Mass",
-    material: "Roman vein-cut Tivoli travertine & obsidian slate",
-    spec: "Honed cross-cut extraction • 40mm solid slab perimeter",
-    elevation: "0.0 MM",
-    elevationVal: 0,
-    accentColor: "#9E907B",
-    bgGradient: "from-stone-800/30 via-charcoal/95 to-obsidian",
-    borderColor: "border-white/20",
-    description: "Massive thermal stone slabs providing organic gravitas, thermal regulation, and structural grounding.",
+    id: 2,
+    tierNumber: "03",
+    title: "Tactile Acoustic Envelopes",
+    tagline: "Sensory Ergonomics",
+    category: "Tier 03 • Haute Upholstery",
+    material: "Alpine shearling wool & unbleached Belgian linen",
+    spec: "Biella Piedmont weave • 100,000 Martindale durability rating",
+    elevation: "+130 MM",
+    elevationVal: 130,
+    accentColor: "#D8C7B0",
+    bgGradient: "from-stone-300/15 via-charcoal/95 to-obsidian",
+    borderColor: "border-ivory/50",
+    description: "Cloud-soft textured looped bouclé that cushions the body while creating rich acoustic dampening throughout the salon.",
+  },
+  {
+    id: 3,
+    tierNumber: "04",
+    title: "Circadian Luminaire Network",
+    tagline: "Atmospheric Luminaire Network",
+    category: "Tier 04 • Architectural Lighting",
+    material: "Hand-patinated antique brass & 2700K warm LED reveals",
+    spec: "CRI 98 color fidelity • Diurnal circadian synchronization",
+    elevation: "+195 MM",
+    elevationVal: 195,
+    accentColor: "#E2C18D",
+    bgGradient: "from-champagne-300/15 via-charcoal/95 to-obsidian",
+    borderColor: "border-champagne/60",
+    description: "Low-glare directional shadow casting calibrated to diurnal daylight progression for deep psychological calm.",
+  },
+  {
+    id: 4,
+    tierNumber: "05",
+    title: "Curatorial Art & Sculptures",
+    tagline: "Sculptural Focal Apex",
+    category: "Tier 05 • Objets d'Art",
+    material: "Lost-wax cast champagne bronze & feldspar stoneware",
+    spec: "Cast bronze edition 3 of 8 • Natural chalk satin glaze",
+    elevation: "+260 MM",
+    elevationVal: 260,
+    accentColor: "#C9A66B",
+    bgGradient: "from-champagne/20 via-charcoal/95 to-obsidian",
+    borderColor: "border-champagne",
+    description: "Numbered bronze sculptures and organic stoneware vessels that catch raking daylight and anchor the room's emotional soul.",
   },
 ];
 
 export default function SpatialLayerStack() {
   const [activeId, setActiveId] = useState<number>(4);
-  const [isFrontView, setIsFrontView] = useState<boolean>(false);
-  const [isStackHovered, setIsStackHovered] = useState<boolean>(false);
-  const [mouseOffset, setMouseOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pathRefs = useRef<(SVGRectElement | null)[]>([]);
-  const datumPathRef = useRef<SVGPathElement | null>(null);
+  const [isExploded, setIsExploded] = useState<boolean>(true);
+  const { ref: containerRef, isInView } = useInView<HTMLDivElement>(0.1);
 
-  // Synchronous Scroll-driven SVG path animation & Z-axis layer separation
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      const paths = pathRefs.current.filter(Boolean);
-      if (paths.length > 0 && containerRef.current) {
-        // Initialize path lengths for SVG draw
-        paths.forEach((p) => {
-          if (!p) return;
-          const len = p.getTotalLength ? p.getTotalLength() : 750;
-          p.style.strokeDasharray = `${len}`;
-          p.style.strokeDashoffset = `${len}`;
-        });
-
-        if (datumPathRef.current) {
-          const dLen = datumPathRef.current.getTotalLength ? datumPathRef.current.getTotalLength() : 300;
-          datumPathRef.current.style.strokeDasharray = `${dLen}`;
-          datumPathRef.current.style.strokeDashoffset = `${dLen}`;
-        }
-
-        // Create scroll-synchronized timeline for path draw and Z-separation spread
-        const scrollTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 80%",
-            end: "bottom 25%",
-            scrub: 1,
-            onUpdate: (self) => {
-              if (containerRef.current) {
-                // Smoothly expand Z-separation along the scroll progression
-                containerRef.current.style.setProperty("--scroll-spread", `${self.progress * 16}px`);
-              }
-            },
-          },
-        });
-
-        // Staggered path drawing '0 0' to '0 1'
-        scrollTl
-          .to(paths, {
-            strokeDashoffset: 0,
-            opacity: 1,
-            stagger: 0.1,
-            ease: "power2.inOut",
-          }, 0)
-          .to(datumPathRef.current, {
-            strokeDashoffset: 0,
-            opacity: 0.8,
-            ease: "power2.inOut",
-          }, 0);
-      }
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Mouse parallax interpolation
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMouseOffset({ x: x * 10, y: y * 10 });
-  };
-
-  const handleMouseLeave = () => {
-    setMouseOffset({ x: 0, y: 0 });
-  };
-
-  const handleCardClick = (id: number) => {
-    if (activeId === id) {
-      setIsFrontView(!isFrontView);
-    } else {
-      setActiveId(id);
-      setIsFrontView(true);
-    }
-  };
-
-  const current = LAYERS.find((l) => l.id === activeId) || LAYERS[0];
+  const current = LAYERS.find((l) => l.id === activeId) || LAYERS[4];
 
   return (
     <div
       ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className="bg-charcoal/70 border border-champagne/20 rounded-2xl sm:rounded-3xl p-5 xs:p-7 sm:p-10 md:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden"
     >
-      {/* Dynamic Background studio radial lighting reacting to selected card */}
+      {/* Studio Radial Ambient Glow reacting to selected tier */}
       <div
-        className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none transition-all duration-700 opacity-25"
+        className="absolute w-[550px] h-[550px] rounded-full blur-[140px] pointer-events-none transition-all duration-700 opacity-20 -z-10"
         style={{
           backgroundColor: current.accentColor,
-          top: "25%",
-          left: "20%",
+          top: "20%",
+          left: "15%",
         }}
       />
-      {/* Secondary Cinematic Studio Rim Light */}
-      <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-champagne/5 blur-[130px] pointer-events-none" />
-
-      {/* Top-Left Decorative Architectural Orbital Ring matching master design */}
-      <div className="absolute top-6 left-6 pointer-events-none z-10 hidden sm:block">
-        <div className="w-20 h-20 rounded-full border border-champagne/30 relative">
-          <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-champagne shadow-[0_0_10px_#C9A66B]" />
-          <div className="w-full h-full rounded-full border border-white/5 scale-75" />
-        </div>
-      </div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-champagne/5 blur-[130px] pointer-events-none -z-10" />
 
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 sm:pb-8 mb-8 sm:mb-12 border-b border-white/10 gap-4 relative z-20">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 sm:pb-8 mb-8 sm:mb-10 border-b border-white/10 gap-4 relative z-20">
         <div>
           <div className="inline-flex items-center space-x-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-1.5">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Interactive 3D Layer Stack</span>
+            <span>Interactive 3D Spatial Chamber</span>
           </div>
           <h3 className="font-serif text-2xl xs:text-3xl sm:text-4xl text-ivory font-light">
             Deconstructed Spatial Anatomy
           </h3>
         </div>
 
-        {/* Action Toggle Pill */}
-        <div className="flex items-center space-x-3">
+        {/* Action Controls */}
+        <div className="flex items-center space-x-2.5 sm:space-x-3">
           <button
-            onClick={() => setIsFrontView(!isFrontView)}
+            onClick={() => setIsExploded(!isExploded)}
             className="flex items-center space-x-2 bg-obsidian/90 hover:bg-champagne hover:text-obsidian px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-champagne/30 text-[11px] sm:text-xs font-mono text-ivory transition-all duration-300 shadow-lg active:scale-95 group"
+            aria-label="Toggle Exploded View"
           >
-            <Eye className="w-3.5 h-3.5 text-champagne group-hover:text-obsidian transition-colors" />
-            <span>{isFrontView ? "Click Card to Dock / Front" : "Inspect Front View"}</span>
+            <Layers className="w-3.5 h-3.5 text-champagne group-hover:text-obsidian transition-colors" />
+            <span>{isExploded ? "Exploded View" : "Compact Stack"}</span>
           </button>
         </div>
       </div>
 
+      {/* Main Grid: 3D Scene Viewport (Left) & Curatorial Dossier (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-20">
         
-        {/* Left: 3D Isometric Exploded Layer Stack Viewport (Col 7) */}
-        <div
-          onMouseEnter={() => setIsStackHovered(true)}
-          onMouseLeave={() => setIsStackHovered(false)}
-          className="lg:col-span-7 relative h-[400px] xs:h-[450px] sm:h-[500px] flex items-center justify-center perspective-[1200px] select-none pt-4"
-        >
+        {/* Left: Interactive Real Three.js 3D Viewport (Col 7) */}
+        <div className="lg:col-span-7 relative h-[380px] xs:h-[440px] sm:h-[490px] md:h-[520px] rounded-2xl bg-gradient-to-b from-obsidian/60 to-obsidian/95 border border-white/5 overflow-hidden flex items-center justify-center select-none shadow-inner">
           
-          {/* Scroll-driven Vertical Datum Ruler with Target Node */}
-          <div className="absolute left-1 xs:left-2 sm:left-6 top-1/2 -translate-y-1/2 pointer-events-none z-30 flex flex-col items-center">
-            <svg width="24" height="260" viewBox="0 0 24 260" className="overflow-visible">
-              <path
-                ref={datumPathRef}
-                d="M 12 10 L 12 250"
-                stroke="#C9A66B"
-                strokeWidth="1.5"
-                strokeDasharray="4 3"
-                fill="none"
-                opacity="0.2"
+          {/* Vertical Elevation Datum Bar (Left edge of 3D viewport) */}
+          <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none z-30 flex flex-col items-center">
+            <div className="w-[1px] h-36 bg-gradient-to-b from-transparent via-champagne/40 to-transparent relative">
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full transition-all duration-500 shadow-champagne"
+                style={{
+                  top: `${100 - (current.id / 4) * 100}%`,
+                  backgroundColor: current.accentColor,
+                }}
               />
-              <circle
-                cx="12"
-                cy={250 - (current.id * 52)}
-                r="5"
-                fill={current.accentColor}
-                className="transition-all duration-500 shadow-champagne"
-              />
-              <circle
-                cx="12"
-                cy={250 - (current.id * 52)}
-                r="10"
-                stroke={current.accentColor}
-                strokeWidth="1"
-                fill="none"
-                opacity="0.4"
-                className="transition-all duration-500"
-              />
-            </svg>
-            <span className="text-[9px] font-mono text-champagne/80 uppercase tracking-widest [writing-mode:vertical-rl] rotate-180 mt-2">
+            </div>
+            <span className="text-[9px] font-mono text-champagne/90 uppercase tracking-widest [writing-mode:vertical-rl] rotate-180 mt-3 font-medium">
               {current.elevation}
             </span>
           </div>
 
-          {/* Main 3D Tilting Stage with Mouse Parallax, Float Drift & Dynamic Z-Separation */}
-          <div
-            className="relative w-64 xs:w-72 sm:w-80 md:w-88 h-44 xs:h-48 sm:h-52 transition-transform duration-700 ease-out animate-float-drift"
-            style={{
-              transformStyle: "preserve-3d",
-              transform: `rotateX(${50 + mouseOffset.y}deg) rotateZ(${-36 + mouseOffset.x}deg) rotateY(${mouseOffset.x * 0.4}deg)`,
-            }}
-          >
-            {/* Ambient Occlusion Ground Contact Shadow underneath the 3D stack */}
-            <div
-              className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-72 sm:w-80 h-36 rounded-[100%] bg-black/85 blur-2xl pointer-events-none -z-10 transition-transform duration-700"
-              style={{
-                transform: `scale(${isStackHovered ? 1.15 : 1}) translateZ(-30px)`,
-              }}
-            />
+          {/* Interactive 3D Canvas Scene */}
+          <SpatialAnatomyCanvas
+            layers={LAYERS}
+            activeId={activeId}
+            isExploded={isExploded}
+            onSelect={(id) => setActiveId(id)}
+            isInView={isInView}
+          />
 
-            {/* Isometric Layer Stack with hover/scroll Z-axis expansion */}
-            {LAYERS.map((layer) => {
-              const isSelected = activeId === layer.id;
-              
-              // Base spacing in isometric stack: expands smoothly on stack hover or scroll
-              const baseSpacing = isStackHovered ? 56 : 46;
-              const baseElevation = layer.id * baseSpacing;
+          {/* Bottom-left Orbit Hint */}
+          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center space-x-2 bg-obsidian/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[10px] sm:text-[11px] font-mono text-ivory-dark pointer-events-none">
+            <Compass className="w-3.5 h-3.5 text-champagne animate-spin" style={{ animationDuration: "12s" }} />
+            <span>Drag to Orbit • Click Slabs to Inspect</span>
+          </div>
 
-              // Front-facing inspection dock OR elevated isometric floating card
-              const bringToFrontTransform = isSelected && isFrontView
-                ? `translateZ(275px) translateY(-15px) rotateZ(${36 - mouseOffset.x}deg) rotateX(${-50 - mouseOffset.y}deg) scale(1.15)`
-                : `translateZ(calc(${isSelected ? baseElevation + 44 : baseElevation}px + var(--scroll-spread, 0px))) scale(${isSelected ? 1.05 : 1})`;
-
-              return (
-                <div
-                  key={layer.id}
-                  onClick={() => handleCardClick(layer.id)}
-                  onMouseEnter={() => {
-                    if (!isFrontView) setActiveId(layer.id);
-                  }}
-                  className={`absolute inset-0 rounded-[20px] sm:rounded-[22px] backdrop-blur-2xl p-4 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
-                    isSelected
-                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(201,166,107,0.38)] ring-1 ring-champagne/40`
-                      : isFrontView
-                      ? "bg-[#0A0A0A]/95 border border-white/10 opacity-30 blur-[0.5px] hover:opacity-75 z-10"
-                      : "bg-[#0C0C0C]/92 border border-white/10 opacity-75 hover:opacity-100 z-10 shadow-[0_15px_35px_rgba(0,0,0,0.7)]"
-                  }`}
-                  style={{
-                    transform: bringToFrontTransform,
-                    transformStyle: "preserve-3d",
-                  }}
-                >
-                  {/* Glassmorphism reflection sheen & top bevel highlight */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none rounded-[20px] sm:rounded-[22px]" />
-                  <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-                  {/* Scroll-Driven SVG Drawable Contour Path matching draw: ['0 0', '0 1', '1 1'] */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-[20px] sm:rounded-[22px] overflow-visible">
-                    <rect
-                      ref={(el) => {
-                        pathRefs.current[layer.id] = el;
-                      }}
-                      x="1"
-                      y="1"
-                      width="calc(100% - 2px)"
-                      height="calc(100% - 2px)"
-                      rx="18"
-                      ry="18"
-                      fill="none"
-                      stroke={layer.accentColor}
-                      strokeWidth={isSelected ? "1.8" : "1"}
-                      opacity={isSelected ? "1" : "0.4"}
-                      className="transition-colors duration-500"
-                      style={{
-                        filter: isSelected ? `drop-shadow(0 0 10px ${layer.accentColor})` : "none",
-                      }}
-                    />
-                  </svg>
-
-                  {/* Top Bar of Card */}
-                  <div className="flex items-center justify-between text-xs font-mono relative z-10">
-                    <div className="flex items-center space-x-1.5 sm:space-x-2">
-                      <span
-                        className="px-2.5 sm:px-3 py-0.5 rounded-full font-bold text-[11px] sm:text-[12px] tracking-wide transition-all shadow-sm"
-                        style={{
-                          backgroundColor: isSelected ? layer.accentColor : "rgba(255,255,255,0.08)",
-                          color: isSelected ? "#0A0A0A" : "#F4F0E8",
-                        }}
-                      >
-                        {layer.tierNumber}
-                      </span>
-                      {isSelected && isFrontView && (
-                        <span className="text-[9px] sm:text-[10px] text-champagne font-mono font-medium flex items-center space-x-1 animate-pulse">
-                          <span>• Front Inspection</span>
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[10px] sm:text-[11px] font-mono tracking-widest text-champagne font-medium">
-                      {layer.elevation}
-                    </span>
-                  </div>
-
-                  {/* Center Content with Serif Typography */}
-                  <div className="relative z-10 my-auto py-1">
-                    <h4 className="font-serif text-lg xs:text-xl sm:text-[23px] text-ivory tracking-wide leading-snug mb-1 font-normal group-hover:text-champagne transition-colors">
-                      {layer.title}
-                    </h4>
-                    <p className="text-[10px] sm:text-xs text-ivory/70 line-clamp-1 font-serif italic">
-                      {layer.material}
-                    </p>
-                  </div>
-
-                  {/* Divider line and Bottom Tagline matching screenshot */}
-                  <div className="relative z-10 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-[11px] text-ivory-dark">
-                    <span className="text-ivory/80 font-sans tracking-wide line-clamp-1">
-                      {layer.tagline}
-                    </span>
-                    <span
-                      className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300 flex-shrink-0 ml-2"
-                      style={{
-                        backgroundColor: layer.accentColor,
-                        transform: isSelected ? "scale(1.2)" : "scale(0.9)",
-                        boxShadow: isSelected ? `0 0 12px ${layer.accentColor}` : "none",
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
+          {/* Top-Right Active Tier Indicator */}
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex items-center space-x-1.5 bg-obsidian/85 backdrop-blur-md px-3 py-1 rounded-full border border-champagne/30 text-[10px] font-mono text-champagne pointer-events-none">
+            <span className="w-1.5 h-1.5 rounded-full bg-champagne animate-pulse" />
+            <span>3D Interactive Anatomy</span>
           </div>
         </div>
 
-        {/* Right: Curatorial Deep Dossier (Col 5) with smooth fade-in transitions on selection or hover */}
-        <div className="lg:col-span-5 flex flex-col space-y-6 lg:pl-4">
+        {/* Right: Curatorial Deep Dossier (Col 5) */}
+        <div className="lg:col-span-5 flex flex-col space-y-6 lg:pl-2">
           <div key={current.id} className="animate-luxury-fade space-y-6">
             <div className="space-y-3">
               <div className="inline-flex items-center space-x-2">
@@ -435,12 +206,12 @@ export default function SpatialLayerStack() {
             </div>
 
             {/* Technical Ledger Box */}
-            <div className="bg-obsidian/90 border border-champagne/20 rounded-2xl p-6 space-y-3.5 text-xs font-mono shadow-xl backdrop-blur-xl">
+            <div className="bg-obsidian/90 border border-champagne/20 rounded-2xl p-5 sm:p-6 space-y-3.5 text-xs font-mono shadow-xl backdrop-blur-xl">
               <div className="flex justify-between py-1.5 border-b border-white/5">
                 <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
                   Material Matrix
                 </span>
-                <span className="text-ivory font-sans text-right max-w-[60%]">
+                <span className="text-ivory font-sans text-right max-w-[62%]">
                   {current.material}
                 </span>
               </div>
@@ -449,7 +220,7 @@ export default function SpatialLayerStack() {
                 <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
                   Technical Spec
                 </span>
-                <span className="text-champagne font-sans text-right max-w-[60%]">
+                <span className="text-champagne font-sans text-right max-w-[62%]">
                   {current.spec}
                 </span>
               </div>
@@ -475,26 +246,31 @@ export default function SpatialLayerStack() {
             </div>
           </div>
 
-          {/* Quick Select Buttons 05 to 01 */}
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-2">
-            {LAYERS.map((l) => {
-              const isSelected = activeId === l.id;
-              return (
-                <button
-                  key={l.id}
-                  onClick={() => setActiveId(l.id)}
-                  onMouseEnter={() => setActiveId(l.id)}
-                  className={`w-9 h-9 sm:w-11 sm:h-11 rounded-full text-[11px] sm:text-xs font-mono font-bold flex items-center justify-center border transition-all duration-300 ${
-                    isSelected
-                      ? "bg-champagne text-obsidian border-champagne shadow-champagne scale-110 ring-2 ring-champagne/40"
-                      : "bg-obsidian/80 text-ivory-muted border-white/10 hover:border-champagne/50 hover:text-ivory"
-                  }`}
-                  aria-label={`Select layer ${l.tierNumber}`}
-                >
-                  {l.tierNumber}
-                </button>
-              );
-            })}
+          {/* Quick Select Buttons 05 to 01 (Safe horizontal tabs, no clipping) */}
+          <div className="pt-2">
+            <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-ivory-dark mb-2.5">
+              Select Architectural Tier
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {[...LAYERS].reverse().map((l) => {
+                const isSelected = activeId === l.id;
+                return (
+                  <button
+                    key={l.id}
+                    onClick={() => setActiveId(l.id)}
+                    className={`h-11 rounded-xl text-xs font-mono font-bold flex flex-col items-center justify-center border transition-all duration-300 ${
+                      isSelected
+                        ? "bg-champagne text-obsidian border-champagne shadow-champagne scale-105 ring-2 ring-champagne/40"
+                        : "bg-obsidian/80 text-ivory-muted border-white/10 hover:border-champagne/50 hover:text-ivory hover:scale-102"
+                    }`}
+                    aria-label={`Select tier ${l.tierNumber}`}
+                  >
+                    <span>{l.tierNumber}</span>
+                    <span className="text-[8px] font-normal opacity-75">{l.elevation}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
