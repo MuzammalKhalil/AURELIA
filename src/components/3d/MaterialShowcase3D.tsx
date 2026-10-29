@@ -6,6 +6,7 @@ import { Float, OrbitControls, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { Layers, Rotate3d, Compass } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 interface MaterialItem {
   id: string;
@@ -272,7 +273,7 @@ export default function MaterialShowcase3D() {
           <directionalLight position={[4, 5, 4]} intensity={2.5} color="#FFF1D9" />
           <directionalLight position={[-4, 2, -3]} intensity={1.2} color="#C9A66B" />
 
-          <Suspense fallback={null}>
+          <Suspense fallback={<Canvas3DLoader scale={0.8} />}>
             <Float speed={1.5} rotationIntensity={0.15} floatIntensity={0.2}>
               <MaterialSphere material={activeMat} />
             </Float>

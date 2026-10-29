@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { Sparkles, Info } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { getAssetPath } from "@/lib/assets";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 useGLTF.preload(getAssetPath("/models/ceramic-vase.glb"));
 useGLTF.preload(getAssetPath("/models/brass-lamp.glb"));
@@ -175,7 +176,7 @@ export default function DecorViewer() {
           <directionalLight position={[3, 4, 3]} intensity={2.0} color="#FFE4BA" />
           <directionalLight position={[-3, 2, -2]} intensity={1.0} color="#C9A66B" />
 
-          <Suspense fallback={null}>
+          <Suspense fallback={<Canvas3DLoader scale={0.75} />}>
             <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
               <ModelItem type={activeType} isRotating={isRotating} />
             </Float>

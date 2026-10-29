@@ -11,6 +11,7 @@ import * as THREE from "three";
 import { Sofa, Armchair, Rotate3d, Compass, Sun, Moon, Sunset, Play, Pause } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { getAssetPath } from "@/lib/assets";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 // Preload models
 useGLTF.preload(getAssetPath("/models/luxury-chair.glb"));
@@ -318,7 +319,7 @@ export default function HeroScene() {
         <StudioLighting mood={mood} />
         <CameraEntrance autoRotate={autoRotate} />
 
-        <Suspense fallback={null}>
+        <Suspense fallback={<Canvas3DLoader scale={1.2} />}>
           {selectedPiece === "chair" ? (
             <LuxuryChairModel mouse={mouseRef} autoRotate={autoRotate} />
           ) : (

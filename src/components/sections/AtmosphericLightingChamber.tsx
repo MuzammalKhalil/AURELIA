@@ -10,6 +10,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useInView } from "@/hooks/useInView";
 import { getAssetPath } from "@/lib/assets";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 interface AmbiancePreset {
   id: string;
@@ -334,7 +335,7 @@ export default function AtmosphericLightingChamber() {
                 color={preset.secondaryColor}
               />
 
-              <Suspense fallback={null}>
+              <Suspense fallback={<Canvas3DLoader scale={0.75} />}>
                 <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
                   <ChamberModel
                     modelPath={modelConfig.path}

@@ -7,6 +7,7 @@ import * as THREE from "three";
 import { useInView } from "@/hooks/useInView";
 import { Sparkles, Eye } from "lucide-react";
 import { getAssetPath } from "@/lib/assets";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 function PedestalArt() {
   const { scene: sculpture } = useGLTF(getAssetPath("/models/sculptural-art.glb"));
@@ -66,7 +67,7 @@ export default function AboutAtelierScene3D() {
         <directionalLight position={[-4, 2, -2]} intensity={0.8} color="#93C5FD" />
         <pointLight position={[0, -1, 2]} intensity={1.0} color="#C9A66B" />
 
-        <Suspense fallback={null}>
+        <Suspense fallback={<Canvas3DLoader scale={0.75} />}>
           <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
             <PedestalArt />
           </Float>

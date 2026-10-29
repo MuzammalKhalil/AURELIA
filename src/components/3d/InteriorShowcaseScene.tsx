@@ -9,6 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Camera, ChevronRight } from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 import { getAssetPath } from "@/lib/assets";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -340,7 +341,7 @@ export default function InteriorShowcaseScene() {
             </>
           )}
 
-          <Suspense fallback={null}>
+          <Suspense fallback={<Canvas3DLoader scale={1.5} />}>
             <InteriorRoom />
             <CameraDirector
               progressRef={progressRef}

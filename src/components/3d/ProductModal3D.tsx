@@ -5,6 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls, ContactShadows, Float } from "@react-three/drei";
 import * as THREE from "three";
 import { X, Sparkles, Sun, Sunset, Moon, RotateCcw, Check, Compass, Layers } from "lucide-react";
+import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
 interface ProductModalProps {
   product: {
@@ -153,7 +154,7 @@ export default function ProductModal3D({ product, onClose }: ProductModalProps) 
               </>
             )}
 
-            <Suspense fallback={null}>
+            <Suspense fallback={<Canvas3DLoader scale={0.75} />}>
               <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
                 <ProductMesh
                   modelPath={product.modelPath}

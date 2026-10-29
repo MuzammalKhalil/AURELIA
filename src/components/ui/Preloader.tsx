@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Sparkles, Compass } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { useProgress } from "@react-three/drei";
 import gsap from "gsap";
 
 const phrases = [
@@ -11,12 +12,12 @@ const phrases = [
   "WELCOME TO AURELIA",
 ];
 
-// 36 precision dial tick marks
 const TICK_COUNT = 36;
 const TICKS = Array.from({ length: TICK_COUNT }, (_, i) => i);
 
 export default function Preloader() {
-  const [progress, setProgress] = useState(0);
+  const { active, progress: threeProgress } = useProgress();
+  const [displayProgress, setDisplayProgress] = useState(0);
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
@@ -24,69 +25,103 @@ export default function Preloader() {
   const containerRef = useRef<HTMLDivElement>(null);
   const tickerRef = useRef<HTMLDivElement>(null);
   const ticksRef = useRef<(HTMLDivElement | null)[]>([]);
+  const minTimerDone = useRef(false);
+  const isDoneRef = useRef(false);
 
   useEffect(() => {
-    // 1. Exactly implement user's timeline:
-    // createTimeline()
-    //   .add('.tick', { y: '-=6', duration: 50 }, stagger(10))
-    //   .add('.ticker', { rotate: 360, duration: 1920 }, '<');
     const validTicks = ticksRef.current.filter(Boolean);
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setFadeOut(true);
-        setTimeout(() => setLoading(false), 450);
-      },
-    });
+    const tl = gsap.timeline();
 
     if (validTicks.length > 0 && tickerRef.current) {
       tl.to(validTicks, {
         y: "-=6",
-        duration: 0.05, // 50ms
-        stagger: 0.01,  // stagger(10ms)
+        duration: 0.05,
+        stagger: 0.01,
         yoyo: true,
-        repeat: 3,      // ripples around the dial during the spin
+        repeat: 3,
         ease: "power1.inOut",
       })
       .to(tickerRef.current, {
         rotate: 360,
-        duration: 1.92, // 1920ms
+        duration: 1.8,
         ease: "power2.inOut",
-      }, "<"); // Starts synchronously with '<'
+      }, "<");
     }
 
-    // 2. Synchronize progress counter smoothly to 100% over 1920ms
+    // Smooth RAF progress interpolator
     const startTime = performance.now();
-    const duration = 1920;
+    const MIN_DURATION = 1800; // Minimum 1.8s for dial choreography
+    let currentVal = 0;
+    let rafId: number;
 
-    const timer = setInterval(() => {
+    const tick = () => {
       const elapsed = performance.now() - startTime;
-      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
-      setProgress(pct);
+      const timePercent = Math.min(100, (elapsed / MIN_DURATION) * 100);
 
-      if (pct > 75) setPhraseIndex(3);
-      else if (pct > 50) setPhraseIndex(2);
-      else if (pct > 25) setPhraseIndex(1);
-
-      if (elapsed >= duration) {
-        clearInterval(timer);
+      if (elapsed >= MIN_DURATION) {
+        minTimerDone.current = true;
       }
-    }, 20);
+
+      // Target progress is governed by real 3D assets + time baseline
+      const targetPercent = active
+        ? Math.max(timePercent * 0.7, threeProgress)
+        : Math.max(timePercent, 100);
+
+      // Smooth buttery lerp
+      currentVal += (targetPercent - currentVal) * 0.08;
+      const rounded = Math.min(100, Math.floor(currentVal));
+      setDisplayProgress(rounded);
+
+      if (rounded > 75) setPhraseIndex(3);
+      else if (rounded > 50) setPhraseIndex(2);
+      else if (rounded > 25) setPhraseIndex(1);
+
+      // Complete when dial choreography finishes and 3D assets are ready
+      if (minTimerDone.current && rounded >= 99 && !isDoneRef.current) {
+        isDoneRef.current = true;
+        setDisplayProgress(100);
+        setFadeOut(true);
+        setTimeout(() => {
+          setLoading(false);
+        }, 650);
+        return;
+      }
+
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+
+    // Fallback safety timeout so user is never stuck
+    const safetyTimer = setTimeout(() => {
+      if (!isDoneRef.current) {
+        isDoneRef.current = true;
+        setDisplayProgress(100);
+        setFadeOut(true);
+        setTimeout(() => setLoading(false), 500);
+      }
+    }, 4500);
 
     return () => {
-      clearInterval(timer);
+      cancelAnimationFrame(rafId);
+      clearTimeout(safetyTimer);
       tl.kill();
     };
-  }, []);
+  }, [active, threeProgress]);
 
   if (!loading) return null;
 
   return (
     <div
       ref={containerRef}
-      onClick={() => setLoading(false)}
-      className={`fixed inset-0 z-[99999] bg-obsidian flex flex-col justify-between p-8 md:p-14 select-none cursor-pointer transition-all duration-500 ease-out ${
-        fadeOut ? "opacity-0 pointer-events-none scale-105" : "opacity-100 scale-100"
+      onClick={() => {
+        isDoneRef.current = true;
+        setFadeOut(true);
+        setTimeout(() => setLoading(false), 400);
+      }}
+      className={`fixed inset-0 z-[99999] bg-obsidian flex flex-col justify-between p-8 md:p-14 select-none cursor-pointer transition-all duration-700 ease-out ${
+        fadeOut ? "opacity-0 pointer-events-none scale-[1.02] blur-sm" : "opacity-100 scale-100 blur-0"
       }`}
     >
       {/* Background ambient radial aura */}
@@ -109,11 +144,11 @@ export default function Preloader() {
         {/* Luxury Architectural Dial Gauge */}
         <div className="relative w-36 h-36 flex items-center justify-center">
           
-          {/* Subtle outer dial ring */}
+          {/* Outer dial rings */}
           <div className="absolute inset-2 rounded-full border border-champagne/20 pointer-events-none" />
           <div className="absolute inset-5 rounded-full border border-dashed border-white/10 pointer-events-none" />
 
-          {/* .tick marks arranged along the circular circumference */}
+          {/* Dial tick marks */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             {TICKS.map((idx) => {
               const deg = (idx * 360) / TICK_COUNT;
@@ -140,13 +175,12 @@ export default function Preloader() {
             })}
           </div>
 
-          {/* .ticker central pointer needle spinning 360deg in 1920ms */}
+          {/* Needle Pointer */}
           <div
             ref={tickerRef}
             className="ticker absolute w-full h-full flex items-center justify-center pointer-events-none"
             style={{ transformOrigin: "center center" }}
           >
-            {/* Compass / Needle Pointer */}
             <div className="w-[2px] h-14 bg-gradient-to-t from-transparent via-champagne to-champagne rounded-full -translate-y-7 shadow-[0_0_8px_#C9A66B]" />
             <div className="absolute top-5 w-2 h-2 rounded-full bg-champagne shadow-[0_0_10px_#C9A66B]" />
           </div>
@@ -183,17 +217,17 @@ export default function Preloader() {
         <div className="flex items-center justify-between text-xs font-mono text-ivory-dark">
           <span className="tracking-widest uppercase text-[10px] flex items-center space-x-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-champagne animate-ping" />
-            <span>Calibrating Spatial Engine</span>
+            <span>Streaming 3D Spatial Geometry</span>
           </span>
           <span className="text-champagne font-semibold font-mono text-xs">
-            {progress}%
+            {displayProgress}%
           </span>
         </div>
 
         <div className="w-full h-[2px] bg-white/10 rounded-full overflow-hidden relative">
           <div
-            className="h-full bg-champagne transition-all duration-100 ease-linear shadow-[0_0_10px_#C9A66B]"
-            style={{ width: `${progress}%` }}
+            className="h-full bg-champagne transition-all duration-150 ease-out shadow-[0_0_10px_#C9A66B]"
+            style={{ width: `${displayProgress}%` }}
           />
         </div>
       </div>
