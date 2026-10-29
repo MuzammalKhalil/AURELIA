@@ -108,28 +108,26 @@ export default function PhilosophySection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-28 bg-[#FAF7F2] border-y border-[#C9A66B]/25 overflow-hidden text-[#141210]"
+      className="relative py-28 bg-charcoal border-y border-champagne/15 overflow-hidden"
     >
-      {/* Background warm radial accents */}
-      <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-[#E8DCBA]/30 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-[#F0E6D2]/40 rounded-full blur-[130px] pointer-events-none" />
+      {/* Background radial accent */}
+      <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-champagne/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 space-y-20">
         
         {/* Editorial Heading */}
         <div
           ref={headerRef}
-          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-16 border-b border-[#C9A66B]/20"
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-16 border-b border-white/10"
         >
           <SectionHeading
             badge="Manifesto & Philosophy"
             title="Spaces with soul. Details with purpose."
             subtitle="We reject sterile minimalism and noisy ornamentation alike. Our craft is dedicated to the poetic quietude of authentic luxury."
-            light={true}
           />
-          <div className="max-w-sm text-xs text-[#5C554D] leading-relaxed font-mono bg-white/85 p-5 rounded-2xl border border-[#C9A66B]/20 shadow-sm">
+          <div className="max-w-sm text-xs text-ivory-dark leading-relaxed font-mono bg-obsidian/40 p-5 rounded-2xl border border-white/5">
             &ldquo;A residence should not demand attention; it should restore peace, deepen presence, and hold timeless generational memory.&rdquo;
-            <span className="block text-[#8C6D39] mt-2 font-serif text-sm font-medium">— Aurelia Design Atelier</span>
+            <span className="block text-champagne mt-2 font-serif text-sm">— Aurelia Design Atelier</span>
           </div>
         </div>
 
@@ -151,10 +149,10 @@ export default function PhilosophySection() {
                 <div
                   onMouseEnter={() => setHoveredCard(idx)}
                   onMouseLeave={() => setHoveredCard(null)}
-                  className={`h-full relative bg-white border rounded-2xl p-7 flex flex-col justify-between transition-all duration-500 overflow-hidden group select-none ${
+                  className={`h-full relative bg-obsidian/70 border rounded-2xl p-7 flex flex-col justify-between transition-all duration-500 overflow-hidden group select-none ${
                     isHovered
-                      ? "border-[#C9A66B] shadow-[0_25px_60px_rgba(180,140,80,0.18),0_0_30px_rgba(201,166,107,0.2)] -translate-y-2"
-                      : "border-[#E5DFD3] hover:border-[#C9A66B]/50 shadow-[0_10px_30px_rgba(0,0,0,0.04)]"
+                      ? "border-champagne/60 shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_35px_rgba(201,166,107,0.25)] -translate-y-2"
+                      : "border-white/10 hover:border-champagne/30 shadow-lg"
                   }`}
                   style={{
                     transformStyle: "preserve-3d",
@@ -164,8 +162,8 @@ export default function PhilosophySection() {
                   <div
                     className="absolute -top-16 -right-16 w-48 h-48 rounded-full blur-3xl pointer-events-none transition-opacity duration-500"
                     style={{
-                      background: "radial-gradient(circle, rgba(201,166,107,0.18), transparent 70%)",
-                      opacity: isHovered ? 1 : 0.15,
+                      background: "radial-gradient(circle, rgba(201,166,107,0.25), transparent 70%)",
+                      opacity: isHovered ? 1 : 0.2,
                     }}
                   />
 
@@ -177,15 +175,15 @@ export default function PhilosophySection() {
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
                         isHovered
-                          ? "bg-[#C9A66B] text-white shadow-[0_4px_15px_rgba(201,166,107,0.4)] scale-110"
-                          : "bg-[#FAF7F2] border border-[#C9A66B]/35 text-[#8C6D39]"
+                          ? "bg-champagne text-obsidian shadow-champagne scale-110"
+                          : "bg-champagne/10 border border-champagne/30 text-champagne"
                       }`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
                     <span
                       className={`font-mono text-xs font-bold transition-colors ${
-                        isHovered ? "text-[#8C6D39]" : "text-[#7A7268]"
+                        isHovered ? "text-champagne" : "text-ivory-dark"
                       }`}
                     >
                       0{idx + 1}
@@ -197,7 +195,7 @@ export default function PhilosophySection() {
                     className="relative z-10 transition-transform duration-500"
                     style={{ transform: isHovered ? "translateZ(50px) scale(1.05)" : "translateZ(25px)" }}
                   >
-                    <Pillar3DVisual type={idx as 0 | 1 | 2 | 3} isHovered={isHovered} light={true} />
+                    <Pillar3DVisual type={idx as 0 | 1 | 2 | 3} isHovered={isHovered} />
                   </div>
 
                   {/* Title & Description */}
@@ -207,31 +205,31 @@ export default function PhilosophySection() {
                   >
                     <h3
                       className={`font-serif text-xl mb-2.5 font-light transition-colors ${
-                        isHovered ? "text-[#8C6D39]" : "text-[#141210]"
+                        isHovered ? "text-champagne" : "text-ivory"
                       }`}
                     >
                       {pillar.title}
                     </h3>
-                    <p className="text-xs text-[#5C554D] leading-relaxed font-light">
+                    <p className="text-xs text-ivory-muted leading-relaxed font-light">
                       {pillar.description}
                     </p>
                   </div>
 
                   {/* Bottom Discipline Badge */}
                   <div
-                    className="pt-5 mt-6 border-t border-[#F0EBE1] flex items-center justify-between relative z-10"
+                    className="pt-5 mt-6 border-t border-white/5 flex items-center justify-between relative z-10"
                     style={{ transform: "translateZ(20px)" }}
                   >
                     <span
                       className={`text-[10px] uppercase font-mono tracking-widest transition-colors ${
-                        isHovered ? "text-[#8C6D39] font-semibold" : "text-[#8C6D39]/80 font-medium"
+                        isHovered ? "text-champagne font-semibold" : "text-champagne/70"
                       }`}
                     >
                       Discipline
                     </span>
                     <span
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                        isHovered ? "bg-[#C9A66B] shadow-[0_0_10px_#C9A66B] scale-125" : "bg-[#C9A66B]/50"
+                        isHovered ? "bg-champagne shadow-[0_0_10px_#C9A66B] scale-125" : "bg-champagne/40"
                       }`}
                     />
                   </div>

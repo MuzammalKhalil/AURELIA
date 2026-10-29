@@ -6,7 +6,6 @@ interface SectionHeadingProps {
   subtitle?: string;
   align?: "left" | "center" | "right";
   className?: string;
-  light?: boolean;
 }
 
 export default function SectionHeading({
@@ -15,7 +14,6 @@ export default function SectionHeading({
   subtitle,
   align = "left",
   className = "",
-  light = false,
 }: SectionHeadingProps) {
   const alignClass =
     align === "center"
@@ -35,19 +33,11 @@ export default function SectionHeading({
           {align === "center" && <span className="w-6 h-[1px] bg-champagne" />}
         </div>
       )}
-      <h2
-        className={`font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-wide leading-[1.15] ${
-          light ? "text-[#141210]" : "text-ivory"
-        }`}
-      >
+      <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-light tracking-wide text-ivory leading-[1.15]">
         {title}
       </h2>
       {subtitle && (
-        <p
-          className={`text-sm md:text-base leading-relaxed font-light ${
-            light ? "text-[#5C554D]" : "text-ivory-muted"
-          }`}
-        >
+        <p className="text-sm md:text-base text-ivory-muted leading-relaxed font-light">
           {subtitle}
         </p>
       )}
