@@ -74,6 +74,19 @@
   animation: luxuryFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes floatDrift {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float-drift {
+  animation: floatDrift 7s ease-in-out infinite;
+}
+
 .gold-border {
   border-color: rgba(201, 166, 107, 0.2);
 }

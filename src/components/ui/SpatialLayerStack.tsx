@@ -196,15 +196,17 @@ export default function SpatialLayerStack() {
       onMouseLeave={handleMouseLeave}
       className="bg-charcoal/70 border border-champagne/20 rounded-2xl sm:rounded-3xl p-5 xs:p-7 sm:p-10 md:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden"
     >
-      {/* Dynamic Background radial lighting reacting to selected card */}
+      {/* Dynamic Background studio radial lighting reacting to selected card */}
       <div
-        className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none transition-all duration-700 opacity-20"
+        className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none transition-all duration-700 opacity-25"
         style={{
           backgroundColor: current.accentColor,
-          top: "30%",
-          left: "25%",
+          top: "25%",
+          left: "20%",
         }}
       />
+      {/* Secondary Cinematic Studio Rim Light */}
+      <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-champagne/5 blur-[130px] pointer-events-none" />
 
       {/* Top-Left Decorative Architectural Orbital Ring matching master design */}
       <div className="absolute top-6 left-6 pointer-events-none z-10 hidden sm:block">
@@ -282,14 +284,22 @@ export default function SpatialLayerStack() {
             </span>
           </div>
 
-          {/* Main 3D Tilting Stage with Mouse Parallax & Dynamic Z-Separation */}
+          {/* Main 3D Tilting Stage with Mouse Parallax, Float Drift & Dynamic Z-Separation */}
           <div
-            className="relative w-64 xs:w-72 sm:w-80 md:w-88 h-44 xs:h-48 sm:h-52 transition-transform duration-700 ease-out"
+            className="relative w-64 xs:w-72 sm:w-80 md:w-88 h-44 xs:h-48 sm:h-52 transition-transform duration-700 ease-out animate-float-drift"
             style={{
               transformStyle: "preserve-3d",
               transform: `rotateX(${50 + mouseOffset.y}deg) rotateZ(${-36 + mouseOffset.x}deg) rotateY(${mouseOffset.x * 0.4}deg)`,
             }}
           >
+            {/* Ambient Occlusion Ground Contact Shadow underneath the 3D stack */}
+            <div
+              className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-72 sm:w-80 h-36 rounded-[100%] bg-black/85 blur-2xl pointer-events-none -z-10 transition-transform duration-700"
+              style={{
+                transform: `scale(${isStackHovered ? 1.15 : 1}) translateZ(-30px)`,
+              }}
+            />
+
             {/* Isometric Layer Stack with hover/scroll Z-axis expansion */}
             {LAYERS.map((layer) => {
               const isSelected = activeId === layer.id;
@@ -312,16 +322,19 @@ export default function SpatialLayerStack() {
                   }}
                   className={`absolute inset-0 rounded-[20px] sm:rounded-[22px] backdrop-blur-2xl p-4 sm:p-6 cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between shadow-2xl relative overflow-hidden group select-none ${
                     isSelected
-                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_35px_rgba(201,166,107,0.38)] ring-1 ring-champagne/40`
+                      ? `bg-gradient-to-br ${layer.bgGradient} z-40 border border-champagne shadow-[0_30px_70px_rgba(0,0,0,0.95),0_0_40px_rgba(201,166,107,0.38)] ring-1 ring-champagne/40`
                       : isFrontView
-                      ? "bg-[#0E0E0E]/90 border border-white/10 opacity-30 blur-[0.5px] hover:opacity-75 z-10"
-                      : "bg-[#0E0E0E]/90 border border-white/10 opacity-70 hover:opacity-100 z-10"
+                      ? "bg-[#0A0A0A]/95 border border-white/10 opacity-30 blur-[0.5px] hover:opacity-75 z-10"
+                      : "bg-[#0C0C0C]/92 border border-white/10 opacity-75 hover:opacity-100 z-10 shadow-[0_15px_35px_rgba(0,0,0,0.7)]"
                   }`}
                   style={{
                     transform: bringToFrontTransform,
                     transformStyle: "preserve-3d",
                   }}
                 >
+                  {/* Glassmorphism reflection sheen & top bevel highlight */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent pointer-events-none rounded-[20px] sm:rounded-[22px]" />
+                  <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                   {/* Scroll-Driven SVG Drawable Contour Path matching draw: ['0 0', '0 1', '1 1'] */}
                   <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-[20px] sm:rounded-[22px] overflow-visible">
                     <rect
