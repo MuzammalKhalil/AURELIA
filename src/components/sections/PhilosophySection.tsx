@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SpatialLayerStack from "@/components/ui/SpatialLayerStack";
 import Tilt3D from "@/components/ui/Tilt3D";
+import Pillar3DVisual from "@/components/ui/Pillar3DVisual";
 import { Compass, Sparkles, Feather, Eye } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -32,6 +33,7 @@ const pillars = [
 ];
 
 export default function PhilosophySection() {
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
@@ -134,27 +136,78 @@ export default function PhilosophySection() {
           <SpatialLayerStack />
         </div>
 
-        {/* 4 Architectural Pillars with 3D Tilt */}
+        {/* 4 Architectural Pillars with Interactive 3D Visuals & 3D Spatial Depth */}
         <div
           ref={pillarsRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-4"
         >
           {pillars.map((pillar, idx) => {
             const Icon = pillar.icon;
+            const isHovered = hoveredCard === idx;
             return (
-              <Tilt3D key={pillar.title} maxTilt={10} scale={1.02}>
-                <div className="h-full relative bg-obsidian/60 border border-white/10 hover:border-champagne/40 rounded-2xl p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-xl group">
-                  <div>
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="w-12 h-12 rounded-xl bg-champagne/10 border border-champagne/30 flex items-center justify-center text-champagne group-hover:scale-110 transition-transform">
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <span className="font-mono text-xs text-ivory-dark group-hover:text-champagne transition-colors">
-                        0{idx + 1}
-                      </span>
-                    </div>
+              <Tilt3D key={pillar.title} maxTilt={12} scale={1.03}>
+                <div
+                  onMouseEnter={() => setHoveredCard(idx)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  className={`h-full relative bg-obsidian/70 border rounded-2xl p-7 flex flex-col justify-between transition-all duration-500 overflow-hidden group select-none ${
+                    isHovered
+                      ? "border-champagne/60 shadow-[0_25px_60px_rgba(0,0,0,0.9),0_0_35px_rgba(201,166,107,0.25)] -translate-y-2"
+                      : "border-white/10 hover:border-champagne/30 shadow-lg"
+                  }`}
+                  style={{
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  {/* Dynamic background light radial */}
+                  <div
+                    className="absolute -top-16 -right-16 w-48 h-48 rounded-full blur-3xl pointer-events-none transition-opacity duration-500"
+                    style={{
+                      background: "radial-gradient(circle, rgba(201,166,107,0.25), transparent 70%)",
+                      opacity: isHovered ? 1 : 0.2,
+                    }}
+                  />
 
-                    <h3 className="font-serif text-xl text-ivory mb-3 font-light">
+                  {/* Top Bar: Icon + Tier Index */}
+                  <div
+                    className="flex items-center justify-between mb-2 relative z-10"
+                    style={{ transform: "translateZ(30px)" }}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                        isHovered
+                          ? "bg-champagne text-obsidian shadow-champagne scale-110"
+                          : "bg-champagne/10 border border-champagne/30 text-champagne"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span
+                      className={`font-mono text-xs font-bold transition-colors ${
+                        isHovered ? "text-champagne" : "text-ivory-dark"
+                      }`}
+                    >
+                      0{idx + 1}
+                    </span>
+                  </div>
+
+                  {/* Real Interactive 3D Geometric Animation */}
+                  <div
+                    className="relative z-10 transition-transform duration-500"
+                    style={{ transform: isHovered ? "translateZ(50px) scale(1.05)" : "translateZ(25px)" }}
+                  >
+                    <Pillar3DVisual type={idx as 0 | 1 | 2 | 3} isHovered={isHovered} />
+                  </div>
+
+                  {/* Title & Description */}
+                  <div
+                    className="relative z-10"
+                    style={{ transform: "translateZ(25px)" }}
+                  >
+                    <h3
+                      className={`font-serif text-xl mb-2.5 font-light transition-colors ${
+                        isHovered ? "text-champagne" : "text-ivory"
+                      }`}
+                    >
                       {pillar.title}
                     </h3>
                     <p className="text-xs text-ivory-muted leading-relaxed font-light">
@@ -162,11 +215,23 @@ export default function PhilosophySection() {
                     </p>
                   </div>
 
-                  <div className="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[10px] uppercase font-mono tracking-widest text-champagne/70">
+                  {/* Bottom Discipline Badge */}
+                  <div
+                    className="pt-5 mt-6 border-t border-white/5 flex items-center justify-between relative z-10"
+                    style={{ transform: "translateZ(20px)" }}
+                  >
+                    <span
+                      className={`text-[10px] uppercase font-mono tracking-widest transition-colors ${
+                        isHovered ? "text-champagne font-semibold" : "text-champagne/70"
+                      }`}
+                    >
                       Discipline
                     </span>
-                    <span className="w-2 h-2 rounded-full bg-champagne/40 group-hover:bg-champagne transition-colors" />
+                    <span
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        isHovered ? "bg-champagne shadow-[0_0_10px_#C9A66B] scale-125" : "bg-champagne/40"
+                      }`}
+                    />
                   </div>
                 </div>
               </Tilt3D>
