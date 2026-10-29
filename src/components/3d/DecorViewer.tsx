@@ -9,11 +9,6 @@ import { useInView } from "@/hooks/useInView";
 import { getAssetPath } from "@/lib/assets";
 import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
-useGLTF.preload(getAssetPath("/models/ceramic-vase.glb"));
-useGLTF.preload(getAssetPath("/models/brass-lamp.glb"));
-useGLTF.preload(getAssetPath("/models/sculptural-art.glb"));
-useGLTF.preload(getAssetPath("/models/side-table.glb"));
-
 type DecorType = "vase" | "lamp" | "sculpture" | "table";
 
 interface DecorMeta {

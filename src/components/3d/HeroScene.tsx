@@ -13,9 +13,8 @@ import { useInView } from "@/hooks/useInView";
 import { getAssetPath } from "@/lib/assets";
 import Canvas3DLoader from "@/components/3d/Canvas3DLoader";
 
-// Preload models
+// Preload only the active initial hero chair model
 useGLTF.preload(getAssetPath("/models/luxury-chair.glb"));
-useGLTF.preload(getAssetPath("/models/luxury-sofa.glb"));
 
 type LightingMood = "daylight" | "sunset" | "midnight";
 
