@@ -100,7 +100,7 @@ export default function SpatialLayerStack() {
   return (
     <div
       ref={containerRef}
-      className="bg-charcoal/70 border border-champagne/20 rounded-2xl sm:rounded-3xl p-5 xs:p-7 sm:p-10 md:p-12 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+      className="bg-white/95 border border-[#C9A66B]/30 rounded-2xl sm:rounded-3xl p-5 xs:p-7 sm:p-10 md:p-12 backdrop-blur-xl shadow-[0_20px_50px_rgba(40,30,20,0.06)] relative overflow-hidden"
     >
       {/* Studio Radial Ambient Glow reacting to selected tier */}
       <div
@@ -111,16 +111,16 @@ export default function SpatialLayerStack() {
           left: "15%",
         }}
       />
-      <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-champagne/5 blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-[#E8DCBA]/30 blur-[130px] pointer-events-none -z-10" />
 
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 sm:pb-8 mb-8 sm:mb-10 border-b border-white/10 gap-4 relative z-20">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 sm:pb-8 mb-8 sm:mb-10 border-b border-[#C9A66B]/20 gap-4 relative z-20">
         <div>
-          <div className="inline-flex items-center space-x-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-champagne mb-1.5">
+          <div className="inline-flex items-center space-x-2 text-[10px] sm:text-xs font-mono uppercase tracking-[0.25em] text-[#8C6D39] mb-1.5 font-medium">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Interactive 3D Spatial Chamber</span>
           </div>
-          <h3 className="font-serif text-2xl xs:text-3xl sm:text-4xl text-ivory font-light">
+          <h3 className="font-serif text-2xl xs:text-3xl sm:text-4xl text-[#141210] font-light">
             Deconstructed Spatial Anatomy
           </h3>
         </div>
@@ -129,10 +129,10 @@ export default function SpatialLayerStack() {
         <div className="flex items-center space-x-2.5 sm:space-x-3">
           <button
             onClick={() => setIsExploded(!isExploded)}
-            className="flex items-center space-x-2 bg-obsidian/90 hover:bg-champagne hover:text-obsidian px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-champagne/30 text-[11px] sm:text-xs font-mono text-ivory transition-all duration-300 shadow-lg active:scale-95 group"
+            className="flex items-center space-x-2 bg-[#FAF7F2] hover:bg-[#C9A66B] hover:text-[#141210] px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full border border-[#C9A66B]/35 text-[11px] sm:text-xs font-mono text-[#141210] transition-all duration-300 shadow-sm active:scale-95 group font-medium"
             aria-label="Toggle Exploded View"
           >
-            <Layers className="w-3.5 h-3.5 text-champagne group-hover:text-obsidian transition-colors" />
+            <Layers className="w-3.5 h-3.5 text-[#8C6D39] group-hover:text-[#141210] transition-colors" />
             <span>{isExploded ? "Exploded View" : "Compact Stack"}</span>
           </button>
         </div>
@@ -142,20 +142,20 @@ export default function SpatialLayerStack() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-20">
         
         {/* Left: Interactive Real Three.js 3D Viewport (Col 7) */}
-        <div className="lg:col-span-7 relative h-[380px] xs:h-[440px] sm:h-[490px] md:h-[520px] rounded-2xl bg-gradient-to-b from-obsidian/60 to-obsidian/95 border border-white/5 overflow-hidden flex items-center justify-center select-none shadow-inner">
+        <div className="lg:col-span-7 relative h-[380px] xs:h-[440px] sm:h-[490px] md:h-[520px] rounded-2xl bg-gradient-to-b from-[#F2ECE1] to-[#E5DDD0] border border-[#C9A66B]/25 overflow-hidden flex items-center justify-center select-none shadow-inner">
           
           {/* Vertical Elevation Datum Bar (Left edge of 3D viewport) */}
           <div className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 pointer-events-none z-30 flex flex-col items-center">
-            <div className="w-[1px] h-36 bg-gradient-to-b from-transparent via-champagne/40 to-transparent relative">
+            <div className="w-[1px] h-36 bg-gradient-to-b from-transparent via-[#8C6D39]/40 to-transparent relative">
               <div
-                className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full transition-all duration-500 shadow-champagne"
+                className="absolute left-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full transition-all duration-500 shadow-sm"
                 style={{
                   top: `${100 - (current.id / 4) * 100}%`,
                   backgroundColor: current.accentColor,
                 }}
               />
             </div>
-            <span className="text-[9px] font-mono text-champagne/90 uppercase tracking-widest [writing-mode:vertical-rl] rotate-180 mt-3 font-medium">
+            <span className="text-[9px] font-mono text-[#8C6D39] uppercase tracking-widest [writing-mode:vertical-rl] rotate-180 mt-3 font-semibold">
               {current.elevation}
             </span>
           </div>
@@ -170,14 +170,14 @@ export default function SpatialLayerStack() {
           />
 
           {/* Bottom-left Orbit Hint */}
-          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center space-x-2 bg-obsidian/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[10px] sm:text-[11px] font-mono text-ivory-dark pointer-events-none">
-            <Compass className="w-3.5 h-3.5 text-champagne animate-spin" style={{ animationDuration: "12s" }} />
+          <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-20 flex items-center space-x-2 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#C9A66B]/25 text-[10px] sm:text-[11px] font-mono text-[#3A352E] shadow-sm pointer-events-none">
+            <Compass className="w-3.5 h-3.5 text-[#8C6D39] animate-spin" style={{ animationDuration: "12s" }} />
             <span>Drag to Orbit • Click Slabs to Inspect</span>
           </div>
 
           {/* Top-Right Active Tier Indicator */}
-          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex items-center space-x-1.5 bg-obsidian/85 backdrop-blur-md px-3 py-1 rounded-full border border-champagne/30 text-[10px] font-mono text-champagne pointer-events-none">
-            <span className="w-1.5 h-1.5 rounded-full bg-champagne animate-pulse" />
+          <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex items-center space-x-1.5 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-[#C9A66B]/35 text-[10px] font-mono text-[#8C6D39] shadow-sm pointer-events-none font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#8C6D39] animate-pulse" />
             <span>3D Interactive Anatomy</span>
           </div>
         </div>
@@ -189,56 +189,56 @@ export default function SpatialLayerStack() {
               <div className="inline-flex items-center space-x-2">
                 <span className="w-4 h-[1px]" style={{ backgroundColor: current.accentColor }} />
                 <span
-                  className="text-[11px] uppercase font-mono tracking-[0.25em] font-medium"
-                  style={{ color: current.accentColor }}
+                  className="text-[11px] uppercase font-mono tracking-[0.25em] font-semibold"
+                  style={{ color: "#8C6D39" }}
                 >
                   {current.category}
                 </span>
               </div>
 
-              <h4 className="font-serif text-3xl sm:text-4xl text-ivory font-light leading-tight transition-all duration-300">
+              <h4 className="font-serif text-3xl sm:text-4xl text-[#141210] font-light leading-tight transition-all duration-300">
                 {current.title}
               </h4>
 
-              <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed font-light">
+              <p className="text-xs sm:text-sm text-[#5C554D] leading-relaxed font-light">
                 {current.description}
               </p>
             </div>
 
             {/* Technical Ledger Box */}
-            <div className="bg-obsidian/90 border border-champagne/20 rounded-2xl p-5 sm:p-6 space-y-3.5 text-xs font-mono shadow-xl backdrop-blur-xl">
-              <div className="flex justify-between py-1.5 border-b border-white/5">
-                <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
+            <div className="bg-white border border-[#C9A66B]/25 rounded-2xl p-5 sm:p-6 space-y-3.5 text-xs font-mono shadow-[0_10px_25px_rgba(0,0,0,0.04)]">
+              <div className="flex justify-between py-1.5 border-b border-[#F0EBE1]">
+                <span className="text-[#7A7268] uppercase tracking-widest text-[11px]">
                   Material Matrix
                 </span>
-                <span className="text-ivory font-sans text-right max-w-[62%]">
+                <span className="text-[#141210] font-sans text-right max-w-[62%]">
                   {current.material}
                 </span>
               </div>
 
-              <div className="flex justify-between py-1.5 border-b border-white/5">
-                <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
+              <div className="flex justify-between py-1.5 border-b border-[#F0EBE1]">
+                <span className="text-[#7A7268] uppercase tracking-widest text-[11px]">
                   Technical Spec
                 </span>
-                <span className="text-champagne font-sans text-right max-w-[62%]">
+                <span className="text-[#8C6D39] font-sans text-right max-w-[62%] font-medium">
                   {current.spec}
                 </span>
               </div>
 
-              <div className="flex justify-between py-1.5 border-b border-white/5">
-                <span className="text-ivory-dark uppercase tracking-widest text-[11px]">
+              <div className="flex justify-between py-1.5 border-b border-[#F0EBE1]">
+                <span className="text-[#7A7268] uppercase tracking-widest text-[11px]">
                   Relative Elevation
                 </span>
-                <span className="text-ivory font-mono font-medium">
+                <span className="text-[#141210] font-mono font-medium">
                   {current.elevation}
                 </span>
               </div>
 
               <div className="flex justify-between py-1 text-[11px]">
-                <span className="text-ivory-dark uppercase tracking-widest">
+                <span className="text-[#7A7268] uppercase tracking-widest">
                   Handover Standard
                 </span>
-                <span className="text-champagne flex items-center space-x-1 font-sans">
+                <span className="text-[#8C6D39] flex items-center space-x-1 font-sans font-medium">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Atelier Certified 1-of-1</span>
                 </span>
@@ -248,7 +248,7 @@ export default function SpatialLayerStack() {
 
           {/* Quick Select Buttons 05 to 01 (Safe horizontal tabs, no clipping) */}
           <div className="pt-2">
-            <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-ivory-dark mb-2.5">
+            <div className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#7A7268] mb-2.5 font-medium">
               Select Architectural Tier
             </div>
             <div className="grid grid-cols-5 gap-2">
@@ -260,8 +260,8 @@ export default function SpatialLayerStack() {
                     onClick={() => setActiveId(l.id)}
                     className={`h-11 rounded-xl text-xs font-mono font-bold flex flex-col items-center justify-center border transition-all duration-300 ${
                       isSelected
-                        ? "bg-champagne text-obsidian border-champagne shadow-champagne scale-105 ring-2 ring-champagne/40"
-                        : "bg-obsidian/80 text-ivory-muted border-white/10 hover:border-champagne/50 hover:text-ivory hover:scale-102"
+                        ? "bg-[#C9A66B] text-white border-[#C9A66B] shadow-[0_4px_14px_rgba(201,166,107,0.4)] scale-105 ring-2 ring-[#C9A66B]/40"
+                        : "bg-[#FAF7F2] text-[#5C554D] border-[#C9A66B]/25 hover:border-[#C9A66B] hover:text-[#141210] hover:scale-102"
                     }`}
                     aria-label={`Select tier ${l.tierNumber}`}
                   >

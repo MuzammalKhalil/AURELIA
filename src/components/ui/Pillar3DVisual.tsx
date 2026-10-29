@@ -5,6 +5,7 @@ import React, { useRef, useEffect } from "react";
 interface Pillar3DVisualProps {
   type: 0 | 1 | 2 | 3;
   isHovered: boolean;
+  light?: boolean;
 }
 
 // 3D Point definition
@@ -14,7 +15,7 @@ interface Point3D {
   z: number;
 }
 
-export default function Pillar3DVisual({ type, isHovered }: Pillar3DVisualProps) {
+export default function Pillar3DVisual({ type, isHovered, light = true }: Pillar3DVisualProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rotRef = useRef({ x: 0.3, y: 0.2, z: 0 });
   const speedRef = useRef(1);
@@ -193,11 +194,17 @@ export default function Pillar3DVisual({ type, isHovered }: Pillar3DVisualProps)
         if (!p1 || !p2) continue;
 
         const avgZ = (p1.z + p2.z) / 2;
-        const depthAlpha = Math.max(0.15, Math.min(0.85, (200 - avgZ) / 100));
+        const depthAlpha = Math.max(0.18, Math.min(0.9, (200 - avgZ) / 100));
 
-        ctx.strokeStyle = isHovered
-          ? `rgba(201, 166, 107, ${depthAlpha * 1.2})`
-          : `rgba(201, 166, 107, ${depthAlpha * 0.7})`;
+        if (light) {
+          ctx.strokeStyle = isHovered
+            ? `rgba(130, 95, 40, ${depthAlpha * 1.3})`
+            : `rgba(165, 126, 65, ${depthAlpha * 1.1})`;
+        } else {
+          ctx.strokeStyle = isHovered
+            ? `rgba(201, 166, 107, ${depthAlpha * 1.2})`
+            : `rgba(201, 166, 107, ${depthAlpha * 0.7})`;
+        }
 
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
@@ -210,8 +217,12 @@ export default function Pillar3DVisual({ type, isHovered }: Pillar3DVisualProps)
         const p = projected[i];
         const nodeRadius = Math.max(1, (2.4 * fov) / p.z);
 
-        const nodeAlpha = Math.max(0.2, (200 - p.z) / 100);
-        ctx.fillStyle = isHovered ? "#F4ECDD" : "#C9A66B";
+        const nodeAlpha = Math.max(0.25, (200 - p.z) / 100);
+        if (light) {
+          ctx.fillStyle = isHovered ? "#6B4D1C" : "#A88242";
+        } else {
+          ctx.fillStyle = isHovered ? "#F4ECDD" : "#C9A66B";
+        }
         ctx.globalAlpha = nodeAlpha;
 
         ctx.beginPath();
@@ -220,7 +231,7 @@ export default function Pillar3DVisual({ type, isHovered }: Pillar3DVisualProps)
 
         // Extra halo for frontmost nodes
         if (p.z < 130 && isHovered) {
-          ctx.fillStyle = "rgba(201, 166, 107, 0.4)";
+          ctx.fillStyle = light ? "rgba(180, 140, 75, 0.45)" : "rgba(201, 166, 107, 0.4)";
           ctx.beginPath();
           ctx.arc(p.x, p.y, nodeRadius * 2.5, 0, Math.PI * 2);
           ctx.fill();
@@ -233,8 +244,8 @@ export default function Pillar3DVisual({ type, isHovered }: Pillar3DVisualProps)
       if (type === 2) {
         const pulse = 1 + Math.sin(time * 3.5) * 0.2;
         const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 18 * pulse);
-        grad.addColorStop(0, "rgba(255, 180, 80, 0.8)");
-        grad.addColorStop(0.5, "rgba(201, 166, 107, 0.35)");
+        grad.addColorStop(0, light ? "rgba(225, 135, 35, 0.9)" : "rgba(255, 180, 80, 0.8)");
+        grad.addColorStop(0.5, light ? "rgba(180, 140, 75, 0.45)" : "rgba(201, 166, 107, 0.35)");
         grad.addColorStop(1, "rgba(201, 166, 107, 0)");
         ctx.fillStyle = grad;
         ctx.beginPath();
@@ -250,7 +261,7 @@ export default function Pillar3DVisual({ type, isHovered }: Pillar3DVisualProps)
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, [type, isHovered]);
+  }, [type, isHovered, light]);
 
   return (
     <div className="relative w-full h-32 flex items-center justify-center my-2 pointer-events-none select-none">
